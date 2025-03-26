@@ -1,0 +1,2 @@
+API_KEY=72e54a94-b5de-4da7-a32b-bf9c1ffce063
+JASYPT_ENCRYPTOR_PASSWORD=Reservation$12!
