@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.jsonwebtoken.io.IOException;
 import vehcon.dto.appdata.MenuLink;
+import vehcon.exception.InternalServerError;
+import vehcon.exception.UnauthorizedException;
+import vehcon.models.appdata.PageUrl;
+import vehcon.models.appdata.UserPages;
 import vehcon.models.auth.Roles;
 import vehcon.models.auth.User;
-import vehcon.models.fetch.PageUrl;
-import vehcon.models.fetch.UserPages;
 import vehcon.repo.auth.RolesRepository;
 import vehcon.services.appdata.MenuService;
 import vehcon.services.auth.AuthenticationService;
@@ -24,13 +27,24 @@ public class MenuController {
 
     @Autowired
     private MenuService menuService;
-    @Autowired RolesRepository rolesRepo;
+    @Autowired private RolesRepository rolesRepo;
 
     
     @GetMapping("/menu")
-    public List<UserPages> getMenuLinks(@AuthenticationPrincipal User user) {
-    	Roles role1 = rolesRepo.findByRole(user.getRole().name()).orElseThrow();
-        //return menuService.getMenuLinks(role1.getRolecode());
-    	return menuService.getMenu(role1.getRolecode());
+    public List<PageUrl> refreshToken(@AuthenticationPrincipal User user) throws IOException {
+    	
+    	try
+    	{
+    		Roles role = rolesRepo.findByRole(user.getRole().name()).orElseThrow();
+    		return menuService.getMenuByRole(role.getRolecode());
+    	}
+    	catch (UnauthorizedException ex)
+    	{
+    		throw ex;
+    	}
+    	catch (Exception ex)
+    	{
+    		throw new InternalServerError("Unacle to fetch menu.", ex);
+    	}
     }
 }

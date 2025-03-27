@@ -8,6 +8,9 @@ public class VehicleCondemnationApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(VehicleCondemnationApplication.class, args);
+		
+		System.out.println("Hello");
+		
 	}
 
 }

@@ -2,7 +2,9 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="E:\Vehcond-Backend-main"/>
 			<item value="E:\VehicleCondemnation"/>
+			<item value="E:\VehicleCondemnation-main"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>

@@ -11,39 +11,28 @@ import lombok.Data;
 
 import java.util.List;
 
-import vehcon.repo.auth.PageUrlRepository;
-import vehcon.repo.auth.UserPageRepository;
+import vehcon.repo.appdata.PageUrlRepository;
+import vehcon.repo.appdata.UserPagesRepository;
+
+
+
 import vehcon.dto.appdata.MenuLink;
-import vehcon.models.fetch.*;
+import vehcon.models.appdata.*;
 
 
 @Service
 public class MenuService {
 
     @Autowired
-    private UserPageRepository userPagesRepository;
+    private UserPagesRepository userPagesRepository;
 
     @Autowired
     private PageUrlRepository pageUrlRepository;
 
-    public List<MenuLink> getMenuLinks(Integer rolecode) {
+    public List<PageUrl> getMenuByRole(Integer rolecode) {
         
-        List<UserPages> userPages = userPagesRepository.findByRole(rolecode);
-        System.out.println("User Pages: "+userPages);
-        return null;
-        //return userPages.stream()
-          //      .filter(up -> up.getPageUrl().)
-            //    .map(up -> new MenuLink(up.getPageUrl().getPageurl(), up.getPageUrl().getSubProcessName(), up.getPageUrl().getSubProcessIcon()))
-              //  .collect(Collectors.toList());
+        List<UserPages> userPages = userPagesRepository.findByRolecode(rolecode);
+        return userPages.stream().map(UserPages::getPageUrl).collect(Collectors.toList());
     }
-    
-    public List<UserPages> getMenu(Integer rolecode) {
         
-        List<UserPages> userPages = userPagesRepository.findAll();
-        return userPages;
-        //return userPages.stream()
-          //      .filter(up -> up.getPageUrl().)
-            //    .map(up -> new MenuLink(up.getPageUrl().getPageurl(), up.getPageUrl().getSubProcessName(), up.getPageUrl().getSubProcessIcon()))
-              //  .collect(Collectors.toList());
-    }
 }

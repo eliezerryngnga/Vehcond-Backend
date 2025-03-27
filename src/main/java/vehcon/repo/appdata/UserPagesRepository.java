@@ -3,12 +3,10 @@ package vehcon.repo.appdata;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import vehcon.models.fetch.UserPages;
+import vehcon.models.appdata.UserPages;
 
-public interface UserPagesRepository extends JpaRepository<UserPages, Integer>{
+public interface UserPagesRepository extends JpaRepository<UserPages, String>{
 
-	//@Query()
-	List<UserPages> findUserPages(Integer rolecode);
+	List<UserPages> findByRolecode(Integer rolecode);
 }
