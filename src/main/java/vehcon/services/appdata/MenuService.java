@@ -1,33 +1,24 @@
 package vehcon.services.appdata;
 
+import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 
 import org.springframework.stereotype.Service;
 
-import lombok.Data;
-
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
+import vehcon.models.appdata.PageUrl;
+import vehcon.models.appdata.UserPages;
 import vehcon.repo.appdata.PageUrlRepository;
 import vehcon.repo.appdata.UserPagesRepository;
 
 
-
-import vehcon.dto.appdata.MenuLink;
-import vehcon.models.appdata.*;
-
-
 @Service
+@RequiredArgsConstructor 
 public class MenuService {
 
-    @Autowired
-    private UserPagesRepository userPagesRepository;
+    private final UserPagesRepository userPagesRepository;
 
-    @Autowired
-    private PageUrlRepository pageUrlRepository;
+    private final PageUrlRepository pageUrlRepository;
 
     public List<PageUrl> getMenuByRole(Integer rolecode) {
         

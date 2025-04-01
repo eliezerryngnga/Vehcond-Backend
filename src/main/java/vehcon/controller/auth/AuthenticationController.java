@@ -54,6 +54,24 @@ public class AuthenticationController {
 		} else
 			throw new UnauthorizedException("Invalid Captcha");
 	}
+	
+	@PostMapping("/authenticate2")
+	public ResponseEntity<AuthenticationResponse> authenticate2(@Valid @RequestBody AuthenticationRequest request,
+			HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws BadCredentialsException, UsernameNotFoundException, IOException {
+//		CaptchaEntry captcha = captchaStore.get(request.getUuid().toString());
+//	        
+//	        System.out.println(captcha != null && captcha.getCaptcha().equals(request.getCaptcha()));
+//	        System.out.println("User captcha is: "+request.getCaptcha()+" and the captcha store captcha is: "+captcha);
+//	        System.out.println("The captcha Store is:"+captchaStore);
+//	        if (captcha != null && captcha.getCaptcha().equals(request.getCaptcha())) {
+//	            captchaStore.remove(request.getUuid().toString());
+//	        }
+//	        System.out.println("The captcha Store is:"+captchaStore);
+		if (captchaService.validateCaptcha(request.getCaptchaToken().toString(), request.getCaptcha())) {
+			return ResponseEntity.ok(authService.authenticate2(request, httpRequest, httpResponse));
+		} else
+			throw new UnauthorizedException("Invalid Captcha");
+	}
 
 	@GetMapping("/refresh-token")
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

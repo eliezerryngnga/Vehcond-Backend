@@ -2,11 +2,9 @@ package vehcon.config;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
 import static vehcon.models.auth.Role.ADMIN;
-import static vehcon.models.auth.Role.ADMINISTRATOR;
-import static vehcon.models.auth.Role.TD;
 import static vehcon.models.auth.Role.DA;
+import static vehcon.models.auth.Role.TD;
 
 import java.util.List;
 
@@ -49,7 +47,7 @@ public class SecurityConfig {
 		http.csrf().disable().authorizeHttpRequests().requestMatchers("/auth/**").permitAll()
 				.requestMatchers(GET, "/users/get-user-info").hasAnyAuthority(ADMIN.name())
 				
-				.requestMatchers(GET, "/users/profile","/menu")
+				.requestMatchers(GET, "/users/profile","/menu","/districts","/financial-year","/district-rto")
 				.hasAnyAuthority( DA.name(), ADMIN.name(),TD.name())
 				
 				.requestMatchers(POST, "/users/change-password","/users/update")
