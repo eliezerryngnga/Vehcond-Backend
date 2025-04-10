@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import lombok.Data;
-import vehcon.models.vehiclecondemnations.VehiclePartsConditionDraft;
 
 @Data
 public class VehicleDraftDTO {
@@ -85,6 +84,8 @@ public class VehicleDraftDTO {
     
     private Integer financialYearCode;
     
-	private List<VehiclePartsConditionDraft> vehiclePartsDraft;
+//	private List<VehiclePartsConditionDraft> vehiclePartsDraft;
+    
+    private List<PartsConditionInputDTO> vehiclePartsDraft;
 
 }

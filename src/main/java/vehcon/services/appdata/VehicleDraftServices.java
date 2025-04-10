@@ -1,14 +1,16 @@
 package vehcon.services.appdata;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import vehcon.dto.appdata.PartsConditionInputDTO;
 import vehcon.dto.appdata.VehicleDraftDTO;
 import vehcon.models.masters.Departments;
 import vehcon.models.masters.Districts;
@@ -31,6 +33,7 @@ import vehcon.repo.masters.VehicleTypeRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VehicleDraftServices {
 
     private final VehicleDraftRepository vehicleDraftRepo;
@@ -43,17 +46,70 @@ public class VehicleDraftServices {
     private final VehicleTypeRepository vehicleTypeRepo;
     private final VehicleManufacturerRepository vehicleManufacturerRepo;
 
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE;
+//    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE;
     
     @Transactional
     public String addVehicleDraft(VehicleDraftDTO vehicleDraftDTO) {
         try {
         	
         	VehicleDraft vehicleDraft = new VehicleDraft();
-        	vehicleDraft.setLocations(vehicleDraftDTO.getAddress1()+", "+vehicleDraftDTO.getAddress2());
-        	vehicleDraft.setDirectorateLetterNodate(vehicleDraftDTO.getDirectorateLetterNo()+" "+vehicleDraftDTO.getDirectorateLetterDate());
-            vehicleDraft.setGovtLetterNoDate(vehicleDraftDTO.getForwardingLetterNo()+" "+vehicleDraftDTO.getGovForwardingLetterDate());
-            vehicleDraft.setRegistrationNo(vehicleDraftDTO.getRtoNo()+" "+vehicleDraftDTO.getVehicleRegistrationNumber());
+        	
+        	Processes initialProcess = processesRepo.findById(1)
+                    .orElseThrow(() -> new RuntimeException("Initial Process with code 1 not found."));
+            vehicleDraft.setProcesscode(initialProcess);
+            
+            Integer departmentCodeFromDTO = vehicleDraftDTO.getDepartmentCode();
+            if ( departmentCodeFromDTO != null)
+            {
+                Departments department = departmentRepo.findById(departmentCodeFromDTO)
+                		.orElseThrow(() -> new RuntimeException("Department with code " + departmentCodeFromDTO + " not found."));
+            }
+                       
+            Integer financialYearFromDTO = vehicleDraftDTO.getFinancialYearCode();
+            if(financialYearFromDTO != null) {
+            	FinancialYear financialYear = financialYearRepo.findById(financialYearFromDTO)
+                		.orElseThrow(() -> new RuntimeException("Fiancial Year with code " + financialYearFromDTO + " not found"));
+            }
+            
+            Integer registeredDistrictFromDTO = vehicleDraftDTO.getRegisteredDistrict();
+            if(registeredDistrictFromDTO != null) {
+            	Districts registeredDistricts = districtRepo.findById(registeredDistrictFromDTO)
+                		.orElseThrow(() -> new RuntimeException("Registered District with code " + registeredDistrictFromDTO + " not found"));
+            }
+            
+            Integer vehicleTypeCodeFromDTO = vehicleDraftDTO.getVehicletypecode();
+            if(vehicleTypeCodeFromDTO != null)
+            {
+            	VehicleType vehicleType = vehicleTypeRepo.findById(vehicleTypeCodeFromDTO)
+                    	.orElseThrow(() -> new RuntimeException("Vehicle Type with code " + vehicleTypeCodeFromDTO + " not found"));
+            }
+            
+            Integer vehicleManufacturerFromDTO = vehicleDraftDTO.getVehiclemanufacturercode();
+            if(vehicleManufacturerFromDTO != null) {
+            	VehicleManufacturer vehicleManufacturer = vehicleManufacturerRepo.findById(vehicleManufacturerFromDTO)
+                		.orElseThrow(() -> new RuntimeException("Vehicle Type with code " + vehicleManufacturerFromDTO + " not found"));
+            }
+            
+            
+        	String locations = (vehicleDraftDTO.getAddress1() != null ? vehicleDraftDTO.getAddress1(): "") + ", " + (vehicleDraftDTO.getAddress2() != null ? vehicleDraftDTO.getAddress2() : "");
+        	vehicleDraft.setLocations(locations.equals(", ") ? null : locations);
+        	
+        	// Handle potential null dates before toString()
+            String dirDateStr = vehicleDraftDTO.getDirectorateLetterDate() != null ? vehicleDraftDTO.getDirectorateLetterDate().toString() : "";
+            String directorateLetterNodate = (vehicleDraftDTO.getDirectorateLetterNo() != null ? vehicleDraftDTO.getDirectorateLetterNo() : "") + " " + dirDateStr;
+             vehicleDraft.setDirectorateLetterNodate(directorateLetterNodate.trim().isEmpty() ? null : directorateLetterNodate.trim());
+
+            String govDateStr = vehicleDraftDTO.getGovForwardingLetterDate() != null ? vehicleDraftDTO.getGovForwardingLetterDate().toString() : "";
+            String govtLetterNoDate = (vehicleDraftDTO.getForwardingLetterNo() != null ? vehicleDraftDTO.getForwardingLetterNo() : "") + " " + govDateStr;
+            vehicleDraft.setGovtLetterNoDate(govtLetterNoDate.trim().isEmpty() ? null : govtLetterNoDate.trim());
+
+            String registrationNo = (vehicleDraftDTO.getRtoNo() != null ? vehicleDraftDTO.getRtoNo() : "") + " " +
+                                     (vehicleDraftDTO.getVehicleRegistrationNumber() != null ? vehicleDraftDTO.getVehicleRegistrationNumber() : "");
+             vehicleDraft.setRegistrationNo(registrationNo.trim().isEmpty() ? null : registrationNo.trim());
+        	
+//        	vehicleDraft.setDirectorateLetterNodate(vehicleDraftDTO.getDirectorateLetterNo()+" "+vehicleDraftDTO.getDirectorateLetterDate());
+//            vehicleDraft.setGovtLetterNoDate(vehicleDraftDTO.getForwardingLetterNo()+" "+vehicleDraftDTO.getGovForwardingLetterDate());
+//            vehicleDraft.setRegistrationNo(vehicleDraftDTO.getRtoNo()+" "+vehicleDraftDTO.getVehicleRegistrationNumber());
         	
             vehicleDraft.setOfficeName(vehicleDraftDTO.getOfficeName());
         	vehicleDraft.setOfficerDesignation(vehicleDraftDTO.getOfficerDesignation());
@@ -80,29 +136,7 @@ public class VehicleDraftServices {
         	vehicleDraft.setMviprice(vehicleDraftDTO.getMviprice());
         	vehicleDraft.setMviremarks(vehicleDraftDTO.getMviremarks());
         	
-        	Processes initialProcess = processesRepo.findById(1)
-                    .orElseThrow(() -> new RuntimeException("Initial Process with code 1 not found."));
-            vehicleDraft.setProcesscode(initialProcess);
-            
-            Integer departmentCodeFromDTO = vehicleDraftDTO.getDepartmentCode();
-            Departments department = departmentRepo.findById(departmentCodeFromDTO)
-            		.orElseThrow(() -> new RuntimeException("Department with code " + departmentCodeFromDTO + " not found."));
-           
-            Integer financialYearFromDTO = vehicleDraftDTO.getFinancialYearCode();
-            FinancialYear financialYear = financialYearRepo.findById(financialYearFromDTO)
-            		.orElseThrow(() -> new RuntimeException("Fiancial Year with code " + financialYearFromDTO + " not found"));
-            
-            Integer registeredDistrictFromDTO = vehicleDraftDTO.getRegisteredDistrict();
-            Districts registeredDistricts = districtRepo.findById(registeredDistrictFromDTO)
-            		.orElseThrow(() -> new RuntimeException("Registered District with code " + registeredDistrictFromDTO + " not found"));
-            
-            Integer vehicleTypeCodeFromDTO = vehicleDraftDTO.getVehicletypecode();
-            VehicleType vehicleType = vehicleTypeRepo.findById(vehicleTypeCodeFromDTO)
-            	.orElseThrow(() -> new RuntimeException("Vehicle Type with code " + vehicleTypeCodeFromDTO + " not found"));
-
-            Integer vehicleManufacturerFromDTO = vehicleDraftDTO.getVehiclemanufacturercode();
-            VehicleManufacturer vehicleManufacturer = vehicleManufacturerRepo.findById(vehicleManufacturerFromDTO)
-            		.orElseThrow(() -> new RuntimeException("Vehicle Type with code " + vehicleManufacturerFromDTO + " not found"));
+        	
             String applicationMode = "F";
             vehicleDraft.setApplicationMode(applicationMode);
             
@@ -115,28 +149,61 @@ public class VehicleDraftServices {
             String versionFlagCode = "2";
             vehicleDraft.setVersionflagcode(versionFlagCode);
             
-            vehicleDraft.setEntrydate(LocalDateTime.now());            
+            vehicleDraft.setEntrydate(LocalDateTime.now());     
+            
+            log.debug("Populated VehicleDraft before save: {}", vehicleDraft);
+            
             VehicleDraft savedDraft = vehicleDraftRepo.save(vehicleDraft);
             
+            log.info("VehicleDraft saved with applicationCode: {}", savedDraft.getApplicationCode()); 
             // Fetch all VehicleParts entities from the master.vehicleparts table
-            List<VehicleParts> vehiclePartsList = vehiclePartsRepo.findAll();
+//            List<VehicleParts> vehiclePartsList = vehiclePartsRepo.findAll();
 
-            // Using the applicationCode, Create all the VehiclePartsDraft using this applicationCode and vehiclepartcode
-            for (VehicleParts vehiclePart : vehiclePartsList) {
-                VehiclePartsConditionDraft partsDraft = new VehiclePartsConditionDraft();
+            List<PartsConditionInputDTO> partConditions = vehicleDraftDTO.getVehiclePartsDraft();
+            if(partConditions != null && !partConditions.isEmpty())
+            {
+            	log.debug("Processing {} part conditions from DTO.", partConditions.size());
+            	for(PartsConditionInputDTO partDTO : partConditions) {
+            		VehicleParts vehiclePart = vehiclePartsRepo.findById(partDTO.getVehiclepartcode())
+            				.orElseThrow(() -> new EntityNotFoundException("Vehicle Part with code" + partDTO.getVehiclepartcode() + "not found."));
+            		
+            		VehiclePartsConditionDraft partsDraft = new VehiclePartsConditionDraft();
+                    partsDraft.setApplicationcode(savedDraft);      // Link to the saved VehicleDraft
+                    partsDraft.setVehiclepartcode(vehiclePart);     // Link to the master VehiclePart
+                    partsDraft.setCondition(partDTO.getCondition()); // Set condition from DTO
 
-                // Setting the related entities for the composite primary key
-                partsDraft.setApplicationcode(savedDraft);
-                partsDraft.setVehiclepartcode(vehiclePart);
+                    // partsDraft.setSlno(...) // Set if needed and not auto-generated
 
-                vehiclePartsConditionDraftRepo.save(partsDraft);
+                    vehiclePartsConditionDraftRepo.save(partsDraft);
+            	}
+            	log.info("Saved {} vehicle part conditions for applicationCode: {}", partConditions.size(), savedDraft.getApplicationCode());
             }
-            System.out.println("Draft: "+savedDraft);
+            else
+            {
+            	log.warn("No vehicle part conditions received in DTO for applicationCode: {}", savedDraft.getApplicationCode());
+            }
+            
+            // Using the applicationCode, Create all the VehiclePartsDraft using this applicationCode and vehiclepartcode
+//            for (VehicleParts vehiclePart : vehiclePartsList) {
+//                VehiclePartsConditionDraft partsDraft = new VehiclePartsConditionDraft();
+//
+//                // Setting the related entities for the composite primary key
+//                partsDraft.setApplicationcode(savedDraft);
+//                partsDraft.setVehiclepartcode(vehiclePart);
+//
+//                vehiclePartsConditionDraftRepo.save(partsDraft);
+//            }
+//            System.out.println("Draft: "+savedDraft);
             return savedDraft.getApplicationCode(); // Return the generated applicationCode
+        } catch (EntityNotFoundException ex) {
+            log.error("Data integrity error: {}", ex.getMessage());
+            // Rethrow or wrap in a specific exception that your ControllerAdvice can handle, potentially returning a 404 or 400
+            throw new RuntimeException("Invalid reference data provided: " + ex.getMessage(), ex);
         } catch (Exception ex) {
-        	ex.printStackTrace();
-            throw ex;
+            // Log the full stack trace for unexpected errors
+            log.error("Error adding vehicle draft for DTO: {}", vehicleDraftDTO, ex);
+            // Re-throw a generic exception
+            throw new RuntimeException("An unexpected error occurred while saving the draft.", ex);
         }
     }
-
 }
