@@ -47,11 +47,11 @@ public class SecurityConfig {
 		http.csrf().disable().authorizeHttpRequests().requestMatchers("/auth/**").permitAll()
 				.requestMatchers(GET, "/users/get-user-info").hasAnyAuthority(ADMIN.name())
 				
-				.requestMatchers(GET, "/users/profile","/menu","/districts","/financial-year","/district-rto")
+				.requestMatchers(GET, "/users/profile","/menu","/districts","/financial-year","/district-rto","/vehicle-type","/vehicle-manufacturer","/department","/vehicle-parts")
 				.hasAnyAuthority( DA.name(), ADMIN.name(),TD.name())
 				
-				.requestMatchers(POST, "/users/change-password","/users/update")
-				.hasAnyAuthority(DA.name(), ADMIN.name())
+				.requestMatchers(POST, "/users/change-password","/users/update","/draft")
+				.hasAnyAuthority(DA.name(), ADMIN.name(), TD.name())
 
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authenticationProvider(authenticationProvider)

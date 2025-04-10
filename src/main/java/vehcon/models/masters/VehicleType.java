@@ -10,17 +10,14 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="districtrtos", schema="master")
-public class DistrictRto
-{
+@Table(name = "vehicletypes", schema="master")
+public class VehicleType {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "districtrtocode")
-	private Integer districtRtoCode;
+	@Column(name = "vehicletypecode")
+	private Integer vehicleTypeCode;
 	
-	@Column(name = "rtocode")
-	private String rtoCode;
-	
-	@Column(name = "districtcode")
-	private Integer districtCode;
+	@Column(name = "vehicletypedescription")
+	private String vehicletypedescription;
 }

@@ -16,7 +16,7 @@ public class FinancialYear {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="financialyearcode")
-	private Integer financialYearCode;
+	private Integer financialyearcode;
 	
 	@Column(name ="financialyearfrom")
 	private Integer financialYearFrom;

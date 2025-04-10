@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import vehcon.models.appdata.PageUrl;
 import vehcon.models.appdata.UserPages;
-import vehcon.repo.appdata.PageUrlRepository;
 import vehcon.repo.appdata.UserPagesRepository;
 
 
@@ -18,7 +17,7 @@ public class MenuService {
 
     private final UserPagesRepository userPagesRepository;
 
-    private final PageUrlRepository pageUrlRepository;
+//    private final PageUrlRepository pageUrlRepository;
 
     public List<PageUrl> getMenuByRole(Integer rolecode) {
         
