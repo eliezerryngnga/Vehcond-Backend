@@ -2,7 +2,6 @@ package vehcon.models.vehiclecondemnations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +26,6 @@ import vehcon.models.masters.VehicleType;
 @AllArgsConstructor
 public class VehicleDraft {
 
-	
 	@Column(name = "applicationmode")
     private String applicationMode;
 
@@ -52,18 +49,19 @@ public class VehicleDraft {
     private String premises;
 
     private String locations;
-
+    
     @Column(name = "directorateletternodate")
     private String directorateLetterNodate; 
-
+    
+    
     @Column(name = "govtletternodate")
     private String govtLetterNoDate;
+    
 
     @ManyToOne
     @JoinColumn(name = "vehicletypecode", referencedColumnName="vehicletypecode")
     private VehicleType vehicletypecode;
 
-   
     private String vehicledescription;
 
     @ManyToOne
@@ -73,10 +71,11 @@ public class VehicleDraft {
     @ManyToOne
     @JoinColumn(name = "registereddistrict", referencedColumnName="districtcode")
     private Districts registeredDistrict;
+    
 
     @Column(name="registrationno")
     private String registrationNo;
-
+    
     private String engineno;
 
     private String chassisno;
@@ -126,11 +125,9 @@ public class VehicleDraft {
     @ManyToOne
     @JoinColumn(name = "financialyearcode", referencedColumnName = "financialyearcode")
     private FinancialYear financialYearCode;
+    
 
     private String remarks;
 
     private String versionflagcode;
-    
-	    @Transient
-	    private List<VehiclePartsConditionDraft> vehiclePartsDraft;
 }

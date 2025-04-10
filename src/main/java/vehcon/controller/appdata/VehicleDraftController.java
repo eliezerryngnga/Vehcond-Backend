@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import vehcon.annotations.Auditable;
-import vehcon.models.vehiclecondemnations.VehicleDraft;
+import vehcon.dto.appdata.VehicleDraftDTO;
 import vehcon.services.appdata.VehicleDraftServices;
 
 @RequestMapping("/draft")
@@ -22,8 +22,25 @@ public class VehicleDraftController {
 
     @Auditable
     @PostMapping
-    public ResponseEntity<String> addVehicleDraft(@Valid @RequestBody VehicleDraft vehicleDraft) {
-    	System.out.print("Received VichleDraft:" + vehicleDraft);
+    @Transactional
+    public ResponseEntity<String> addVehicleDraft(@RequestBody VehicleDraftDTO vehicleDraft) {
+//    	System.out.print("Received VichleDraft:" + vehicleDraft);
+//    	
+//    	 System.out.println("Received VehicleDraft:");
+//    	    System.out.println("  Registered District: " + vehicleDraft.getRegisteredDistrict());
+//    	    System.out.println("  RTO No: " + vehicleDraft.getRtoNo());
+//    	    System.out.println("  Vehicle Registration Number: " + vehicleDraft.getVehicleRegistrationNumber());
+//    	    System.out.println("  Financial Year Code: " + vehicleDraft.getFinancialYearCode());
+//    	    System.out.println("  Department Code: " + vehicleDraft.getDepartmentCode());
+//    	    // ... log other fields
+//    	    System.out.println("  Address1: " + vehicleDraft.getAddress1());
+//    	    System.out.println("  Address2: " + vehicleDraft.getAddress2());
+//    	    System.out.println("  Directorate Letter No: " + vehicleDraft.getDirectorateLetterNo());
+//    	    System.out.println("  Directorate Letter Date: " + vehicleDraft.getDirectorateLetterDate());
+//    	    System.out.println("  Forwarding Letter No: " + vehicleDraft.getForwardingLetterNo());
+//    	    System.out.println("  Gov Forwarding Letter Date: " + vehicleDraft.getGovForwardingLetterDate());
+//    	    System.out.println("  Vehicle Parts Draft: " + vehicleDraft.getVehiclePartsDraft());
+    	    
         try {
             String applicationCode = vehDraftService.addVehicleDraft(vehicleDraft);
             return new ResponseEntity<>("Vehicle draft created successfully with Application Code: " + applicationCode, HttpStatus.CREATED);
