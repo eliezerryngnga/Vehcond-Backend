@@ -46,8 +46,6 @@ public class VehicleDraftServices {
     private final VehicleTypeRepository vehicleTypeRepo;
     private final VehicleManufacturerRepository vehicleManufacturerRepo;
 
-//    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE;
-    
     @Transactional
     public String addVehicleDraft(VehicleDraftDTO vehicleDraftDTO) {
         try {
@@ -63,18 +61,21 @@ public class VehicleDraftServices {
             {
                 Departments department = departmentRepo.findById(departmentCodeFromDTO)
                 		.orElseThrow(() -> new RuntimeException("Department with code " + departmentCodeFromDTO + " not found."));
+                vehicleDraft.setDepartmentCode(department);
             }
                        
             Integer financialYearFromDTO = vehicleDraftDTO.getFinancialYearCode();
             if(financialYearFromDTO != null) {
             	FinancialYear financialYear = financialYearRepo.findById(financialYearFromDTO)
                 		.orElseThrow(() -> new RuntimeException("Fiancial Year with code " + financialYearFromDTO + " not found"));
+            	vehicleDraft.setFinancialYearCode(financialYear);
             }
             
             Integer registeredDistrictFromDTO = vehicleDraftDTO.getRegisteredDistrict();
             if(registeredDistrictFromDTO != null) {
             	Districts registeredDistricts = districtRepo.findById(registeredDistrictFromDTO)
                 		.orElseThrow(() -> new RuntimeException("Registered District with code " + registeredDistrictFromDTO + " not found"));
+            	vehicleDraft.setRegisteredDistrict(registeredDistricts);
             }
             
             Integer vehicleTypeCodeFromDTO = vehicleDraftDTO.getVehicletypecode();
@@ -82,12 +83,14 @@ public class VehicleDraftServices {
             {
             	VehicleType vehicleType = vehicleTypeRepo.findById(vehicleTypeCodeFromDTO)
                     	.orElseThrow(() -> new RuntimeException("Vehicle Type with code " + vehicleTypeCodeFromDTO + " not found"));
+            	vehicleDraft.setVehicletypecode(vehicleType);
             }
             
             Integer vehicleManufacturerFromDTO = vehicleDraftDTO.getVehiclemanufacturercode();
             if(vehicleManufacturerFromDTO != null) {
             	VehicleManufacturer vehicleManufacturer = vehicleManufacturerRepo.findById(vehicleManufacturerFromDTO)
-                		.orElseThrow(() -> new RuntimeException("Vehicle Type with code " + vehicleManufacturerFromDTO + " not found"));
+                		.orElseThrow(() -> new RuntimeException("Vehicle Manufacturer with code " + vehicleManufacturerFromDTO + " not found"));
+            	vehicleDraft.setVehiclemanufacturercode(vehicleManufacturer);
             }
             
             
@@ -126,13 +129,17 @@ public class VehicleDraftServices {
         	vehicleDraft.setExpenses(vehicleDraftDTO.getExpenses());
         	vehicleDraft.setRepairexpenses(vehicleDraftDTO.getRepairexpenses());
         	vehicleDraft.setRepairslastsixmonths(vehicleDraftDTO.getRepairslastsixmonths());
+        	
         	vehicleDraft.setWhetheraccident(vehicleDraftDTO.getWhetheraccident());
+        	
         	vehicleDraft.setAccidentcaseresolved(vehicleDraftDTO.getAccidentcaseresolved());
         	vehicleDraft.setComments(vehicleDraftDTO.getComments());
         	vehicleDraft.setMvireportavailable(vehicleDraftDTO.getMvireportavailable());
         	vehicleDraft.setBattery(vehicleDraftDTO.getBattery());
         	vehicleDraft.setTyres(vehicleDraftDTO.getTyres());
-        	vehicleDraft.setAccidentdamage(vehicleDraft.getAccidentdamage());
+        	
+        	vehicleDraft.setAccidentdamage(vehicleDraftDTO.getAccidentdamage());
+        	
         	vehicleDraft.setMviprice(vehicleDraftDTO.getMviprice());
         	vehicleDraft.setMviremarks(vehicleDraftDTO.getMviremarks());
         	
@@ -140,7 +147,7 @@ public class VehicleDraftServices {
             String applicationMode = "F";
             vehicleDraft.setApplicationMode(applicationMode);
             
-            String applicationSlno = UUID.randomUUID().toString().substring(0,10);
+            String applicationSlno = UUID.randomUUID().toString().replace("-","").substring(0,10);
             vehicleDraft.setApplicationSlno(applicationSlno);
             
             String applicationCode = applicationMode + applicationSlno;
@@ -156,23 +163,22 @@ public class VehicleDraftServices {
             VehicleDraft savedDraft = vehicleDraftRepo.save(vehicleDraft);
             
             log.info("VehicleDraft saved with applicationCode: {}", savedDraft.getApplicationCode()); 
-            // Fetch all VehicleParts entities from the master.vehicleparts table
-//            List<VehicleParts> vehiclePartsList = vehiclePartsRepo.findAll();
+
 
             List<PartsConditionInputDTO> partConditions = vehicleDraftDTO.getVehiclePartsDraft();
             if(partConditions != null && !partConditions.isEmpty())
             {
             	log.debug("Processing {} part conditions from DTO.", partConditions.size());
-            	for(PartsConditionInputDTO partDTO : partConditions) {
+            	for(PartsConditionInputDTO partDTO : partConditions) 
+            	{
+	
             		VehicleParts vehiclePart = vehiclePartsRepo.findById(partDTO.getVehiclepartcode())
             				.orElseThrow(() -> new EntityNotFoundException("Vehicle Part with code" + partDTO.getVehiclepartcode() + "not found."));
             		
             		VehiclePartsConditionDraft partsDraft = new VehiclePartsConditionDraft();
-                    partsDraft.setApplicationcode(savedDraft);      // Link to the saved VehicleDraft
-                    partsDraft.setVehiclepartcode(vehiclePart);     // Link to the master VehiclePart
-                    partsDraft.setCondition(partDTO.getCondition()); // Set condition from DTO
-
-                    // partsDraft.setSlno(...) // Set if needed and not auto-generated
+                    partsDraft.setApplicationcode(savedDraft);      
+                    partsDraft.setVehiclepartcode(vehiclePart);     
+                    partsDraft.setCondition(partDTO.getCondition()); 
 
                     vehiclePartsConditionDraftRepo.save(partsDraft);
             	}
@@ -182,18 +188,7 @@ public class VehicleDraftServices {
             {
             	log.warn("No vehicle part conditions received in DTO for applicationCode: {}", savedDraft.getApplicationCode());
             }
-            
-            // Using the applicationCode, Create all the VehiclePartsDraft using this applicationCode and vehiclepartcode
-//            for (VehicleParts vehiclePart : vehiclePartsList) {
-//                VehiclePartsConditionDraft partsDraft = new VehiclePartsConditionDraft();
-//
-//                // Setting the related entities for the composite primary key
-//                partsDraft.setApplicationcode(savedDraft);
-//                partsDraft.setVehiclepartcode(vehiclePart);
-//
-//                vehiclePartsConditionDraftRepo.save(partsDraft);
-//            }
-//            System.out.println("Draft: "+savedDraft);
+
             return savedDraft.getApplicationCode(); // Return the generated applicationCode
         } catch (EntityNotFoundException ex) {
             log.error("Data integrity error: {}", ex.getMessage());
@@ -205,5 +200,31 @@ public class VehicleDraftServices {
             // Re-throw a generic exception
             throw new RuntimeException("An unexpected error occurred while saving the draft.", ex);
         }
-    }
+    }   
+//    @Transactional(readOnly = true)
+//    public List<VehicleDraftListDTO> getDraftsByProcessCode(int processCodeNumber){
+//    	log.info("Fetching drafts with process code: {}", processCodeNumber);
+//    	
+//    	List<VehicleDraft> drafts = vehicleDraftRepo.findDraftsByProcessCodeNumber(processCodeNumber);
+//    	
+//    	log.info("Found {} drafts.", drafts.size(), processCodeNumber);
+//    	
+//    	return drafts.stream()
+//    			.map(this::mapToVehicleDraftListDTO)
+//    			.collect(Collectors.toList());
+//    }
+//    
+//    private VehicleDraftListDTO mapToVehicleDraftListDTO(VehicleDraft draft) {
+//        VehicleDraftListDTO dto = new VehicleDraftListDTO();
+//        dto.setApplicationCode(draft.getApplicationCode()); // Needed for potential Edit action
+//        dto.setRegistrationNo(draft.getRegistrationNo());
+//        dto.setVehicleDescription(draft.getVehicledescription());
+//        dto.setPurchaseDate(draft.getPurchasedate()); // Keep as Date/LocalDate
+//        dto.setDepreciatedValue(draft.getDepreciatedamount()); // Map field name
+//        dto.setTotalKmsLogged(draft.getTotalkms()); // Map field name
+//        // Map boolean-like fields (adjust logic based on actual stored values)
+//        dto.setMviReportsAvailable(draft.getMvireportavailable() != null && draft.getMvireportavailable().equalsIgnoreCase("YES"));
+//        dto.setAnyCasePending(draft.getWhetheraccident() != null && draft.getWhetheraccident().equalsIgnoreCase("YES"));
+//        return dto;
+//    }
 }
