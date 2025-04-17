@@ -47,7 +47,7 @@ public class SecurityConfig {
 		http.csrf().disable().authorizeHttpRequests().requestMatchers("/auth/**").permitAll()
 				.requestMatchers(GET, "/users/get-user-info").hasAnyAuthority(ADMIN.name())
 				
-				.requestMatchers(GET, "/users/profile","/menu","/districts","/financial-year","/district-rto","/vehicle-type","/vehicle-manufacturer","/department","/vehicle-parts","/list")
+				.requestMatchers(GET, "/users/profile","/menu","/districts","/financial-year","/district-rto","/vehicle-type","/vehicle-manufacturer","/department","/vehicle-parts","/draft/list")
 				.hasAnyAuthority( DA.name(), ADMIN.name(),TD.name())
 				
 				.requestMatchers(POST, "/users/change-password","/users/update","/draft","/final-submit")

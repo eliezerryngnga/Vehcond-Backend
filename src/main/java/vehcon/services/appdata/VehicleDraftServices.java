@@ -3,6 +3,7 @@ package vehcon.services.appdata;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import vehcon.dto.appdata.PartsConditionInputDTO;
 import vehcon.dto.appdata.VehicleDraftDTO;
+import vehcon.dto.appdata.VehicleDraftListDTO;
+import vehcon.exception.ObjectNotFoundException;
 import vehcon.models.masters.Departments;
 import vehcon.models.masters.Districts;
 import vehcon.models.masters.FinancialYear;
@@ -109,11 +112,7 @@ public class VehicleDraftServices {
             String registrationNo = (vehicleDraftDTO.getRtoNo() != null ? vehicleDraftDTO.getRtoNo() : "") + " " +
                                      (vehicleDraftDTO.getVehicleRegistrationNumber() != null ? vehicleDraftDTO.getVehicleRegistrationNumber() : "");
              vehicleDraft.setRegistrationNo(registrationNo.trim().isEmpty() ? null : registrationNo.trim());
-        	
-//        	vehicleDraft.setDirectorateLetterNodate(vehicleDraftDTO.getDirectorateLetterNo()+" "+vehicleDraftDTO.getDirectorateLetterDate());
-//            vehicleDraft.setGovtLetterNoDate(vehicleDraftDTO.getForwardingLetterNo()+" "+vehicleDraftDTO.getGovForwardingLetterDate());
-//            vehicleDraft.setRegistrationNo(vehicleDraftDTO.getRtoNo()+" "+vehicleDraftDTO.getVehicleRegistrationNumber());
-        	
+        	        	
             vehicleDraft.setOfficeName(vehicleDraftDTO.getOfficeName());
         	vehicleDraft.setOfficerDesignation(vehicleDraftDTO.getOfficerDesignation());
         	vehicleDraft.setPremises(vehicleDraftDTO.getPremises());
@@ -201,30 +200,65 @@ public class VehicleDraftServices {
             throw new RuntimeException("An unexpected error occurred while saving the draft.", ex);
         }
     }   
-//    @Transactional(readOnly = true)
-//    public List<VehicleDraftListDTO> getDraftsByProcessCode(int processCodeNumber){
+
+    @Transactional(readOnly = true)
+    public List<VehicleDraftListDTO> getDraftsByProcessCode(int processCodeNumber, Integer userDepartmentCode)
+    {
 //    	log.info("Fetching drafts with process code: {}", processCodeNumber);
 //    	
-//    	List<VehicleDraft> drafts = vehicleDraftRepo.findDraftsByProcessCodeNumber(processCodeNumber);
-//    	
+    	List<VehicleDraft> userDrafts = vehicleDraftRepo.findDraftByProcessCodeAndDepartmentCode(processCodeNumber, userDepartmentCode);
+    	
 //    	log.info("Found {} drafts.", drafts.size(), processCodeNumber);
 //    	
-//    	return drafts.stream()
-//    			.map(this::mapToVehicleDraftListDTO)
-//    			.collect(Collectors.toList());
-//    }
-//    
-//    private VehicleDraftListDTO mapToVehicleDraftListDTO(VehicleDraft draft) {
-//        VehicleDraftListDTO dto = new VehicleDraftListDTO();
-//        dto.setApplicationCode(draft.getApplicationCode()); // Needed for potential Edit action
-//        dto.setRegistrationNo(draft.getRegistrationNo());
-//        dto.setVehicleDescription(draft.getVehicledescription());
-//        dto.setPurchaseDate(draft.getPurchasedate()); // Keep as Date/LocalDate
-//        dto.setDepreciatedValue(draft.getDepreciatedamount()); // Map field name
-//        dto.setTotalKmsLogged(draft.getTotalkms()); // Map field name
-//        // Map boolean-like fields (adjust logic based on actual stored values)
-//        dto.setMviReportsAvailable(draft.getMvireportavailable() != null && draft.getMvireportavailable().equalsIgnoreCase("YES"));
-//        dto.setAnyCasePending(draft.getWhetheraccident() != null && draft.getWhetheraccident().equalsIgnoreCase("YES"));
-//        return dto;
-//    }
+    	return userDrafts.stream()
+    			.map(this::mapToVehicleDraftListDTO)
+    			.collect(Collectors.toList());
+    }
+    
+ // --- Get Single Draft (Secured by Department) ---
+    @Transactional(readOnly = true)
+    // Accept user's department code for validation
+    public VehicleDraft getDraftById(String applicationCode, Integer userDepartmentCode) {
+        log.info("Fetching draft with applicationCode: {} for user department: {}", applicationCode, userDepartmentCode);
+
+    
+
+        // Fetch the draft first
+        VehicleDraft draft = vehicleDraftRepo.findById(applicationCode)
+                .orElseThrow(() -> {
+                    log.warn("VehicleDraft not found with code: {}", applicationCode);
+                    return new ObjectNotFoundException("VehicleDraft not found with code: " + applicationCode);
+                });
+
+        // --- Authorization Check: Draft Department Must Match User Department ---
+//        if (draft.getDepartmentCode() == null || draft.getDepartmentCode().getDepartmentCode() == null) {
+//             log.error("Data integrity issue: Draft '{}' is missing its department code.", applicationCode);
+//             // Treat as unauthorized or internal server error
+//             throw new AccessDeniedException("Cannot verify access for draft: " + applicationCode);
+//        }
+//
+//        if (!draft.getDepartmentCode().getDepartmentCode().equals(userDepartmentCode)) {
+//             log.warn("User from department '{}' attempted to access unauthorized draft '{}' belonging to department '{}'",
+//                     userDepartmentCode, applicationCode, draft.getDepartmentCode().getDepartmentCode());
+//             throw new AccessDeniedException("Access denied for draft: " + applicationCode);
+//        }
+//
+//        // If checks pass, user is authorized
+//        log.info("Successfully retrieved authorized draft with code: {}", applicationCode);
+        return draft;
+    }
+    
+    private VehicleDraftListDTO mapToVehicleDraftListDTO(VehicleDraft draft) {
+        VehicleDraftListDTO dto = new VehicleDraftListDTO();
+        dto.setApplicationCode(draft.getApplicationCode()); // Needed for potential Edit action
+        dto.setRegistrationNo(draft.getRegistrationNo());
+        dto.setVehicleDescription(draft.getVehicledescription());
+        dto.setPurchaseDate(draft.getPurchasedate()); // Keep as Date/LocalDate
+        dto.setDepreciatedValue(draft.getDepreciatedamount()); // Map field name
+        dto.setTotalKmsLogged(draft.getTotalkms()); // Map field name
+        // Map boolean-like fields (adjust logic based on actual stored values)
+        dto.setMviReportsAvailable(draft.getMvireportavailable() != null && draft.getMvireportavailable().equalsIgnoreCase("YES"));
+        dto.setAnyCasePending(draft.getWhetheraccident() != null && draft.getWhetheraccident().equalsIgnoreCase("YES"));
+        return dto;
+    }
 }
