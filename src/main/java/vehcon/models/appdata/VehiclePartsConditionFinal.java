@@ -23,14 +23,14 @@ public class VehiclePartsConditionFinal {
  @Id
  @ManyToOne
  @JoinColumn(name = "applicationcode", referencedColumnName = "applicationcode")
- private VehicleFinal applicationcode;
+ private VehicleFinal applicationCode;
 
  @Id
  @ManyToOne
  @JoinColumn(name = "vehiclepartcode", referencedColumnName = "vehiclepartcode")
  private VehicleParts vehiclepartcode;
 
- @Column(name = "condition")
+ @Column(name = "condition", length = 1000)
  private String condition;
 
  @Column(name = "slno")

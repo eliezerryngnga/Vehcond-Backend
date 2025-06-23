@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import vehcon.models.appdata.UserPages;
+import vehcon.models.masters.UserPages;
+import vehcon.models.masters.UserPagesId;
 
-public interface UserPagesRepository extends JpaRepository<UserPages, String>{
+public interface UserPagesRepository extends JpaRepository<UserPages, UserPagesId>{
 
-	List<UserPages> findByRolecode(Integer rolecode);
+	List<UserPages> findByIdRoleCode(Integer roleCode);
 }

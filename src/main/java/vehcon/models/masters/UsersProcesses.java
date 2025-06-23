@@ -12,7 +12,7 @@
 //import vehcon.models.auth.User;
 //
 //@Entity
-//@Table(name = "userprocesses", schema="master")
+//@Table(name = "usersprocesses", schema="master")
 //@Data
 //@NoArgsConstructor
 //@AllArgsConstructor

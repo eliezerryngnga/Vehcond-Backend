@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import vehcon.models.appdata.PageUrl;
-import vehcon.models.appdata.UserPages;
+import vehcon.models.masters.PageUrl;
+import vehcon.models.masters.UserPages;
 import vehcon.repo.appdata.UserPagesRepository;
 
 
@@ -21,8 +21,8 @@ public class MenuService {
 
     public List<PageUrl> getMenuByRole(Integer rolecode) {
         
-        List<UserPages> userPages = userPagesRepository.findByRolecode(rolecode);
+        List<UserPages> userPages = userPagesRepository.findByIdRoleCode(rolecode);
         return userPages.stream().map(UserPages::getPageUrl).collect(Collectors.toList());
     }
-        
+    
 }

@@ -1,7 +1,6 @@
 package vehcon.models.appdata;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,17 +45,17 @@ public class VehicleFinal {
     @Column(name = "officerdesignation")
     private String officerDesignation;
 
-    @Column(name = "premises")
+    @Column(name = "premises", length = 10000)
     private String premises;
 
     @Column(name = "locations")
     private String locations;
     
-    @Column(name = "directorateletternodate")
+    @Column(name = "directorateletternodate", length = 100)
     private String directorateLetterNodate; 
     
     
-    @Column(name = "govtletternodate")
+    @Column(name = "govtletternodate", length = 100)
     private String govtLetterNoDate;
     
 
@@ -76,13 +75,13 @@ public class VehicleFinal {
     private Districts registeredDistrict;
     
 
-    @Column(name="registrationno")
+    @Column(name="registrationno", length = 20)
     private String registrationNo;
     
-    @Column(name="engineno")
+    @Column(name="engineno", length = 20)
     private String engineno;
 
-    @Column(name="chassisno")
+    @Column(name="chassisno", length = 20)
     private String chassisno;
 
     @Column(name="manufactureyear")
@@ -100,7 +99,7 @@ public class VehicleFinal {
     @Column(name="depreciatedamount")
     private Integer depreciatedamount;
 
-    @Column(name="improvements")
+    @Column(name="improvements", length = 1000)
     private String improvements;
 
     @Column(name="expenses")
@@ -112,16 +111,16 @@ public class VehicleFinal {
     @Column(name = "repairslastsixmonths")
     private Integer repairslastsixmonths;
 
-    @Column(name="whetheraccident")
+    @Column(name="whetheraccident", length = 1)
     private String whetheraccident;
 
-    @Column(name="accidentcaseresolved")
+    @Column(name="accidentcaseresolved", length = 1)
     private String accidentcaseresolved;
 
     @Column(name="comments", length = 1000)
     private String comments;
 
-    @Column(name="mvireportavailable")
+    @Column(name="mvireportavailable", length = 1)
     private String mvireportavailable;
 
     @Column(name="battery")
@@ -144,14 +143,14 @@ public class VehicleFinal {
     private Processes processcode;
 
     @Column(name="entrydate")
-    private LocalDateTime entrydate;
+    private LocalDate entrydate;
     
     @ManyToOne
     @JoinColumn(name = "financialyearcode", referencedColumnName = "financialyearcode")
     private FinancialYear financialYearCode;
     
 
-    @Column(name = "remarks")
+    @Column(name = "remarks", length = 1000)
     private String remarks;
 
     @Column(name="versionflagcode")

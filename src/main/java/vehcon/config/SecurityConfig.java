@@ -47,10 +47,78 @@ public class SecurityConfig {
 		http.csrf().disable().authorizeHttpRequests().requestMatchers("/auth/**").permitAll()
 				.requestMatchers(GET, "/users/get-user-info").hasAnyAuthority(ADMIN.name())
 				
-				.requestMatchers(GET, "/users/profile","/menu","/districts","/financial-year","/district-rto","/vehicle-type","/vehicle-manufacturer","/department","/vehicle-parts","/draft/list")
+				.requestMatchers(GET, "/users/profile",
+						"/users/list/enabled",
+						"/users/list/disabled",
+						"/menu",
+						"/districts","/districts/list", 
+						"/financial-year", "/financial-year/list",
+						"/district-rto", "/district-rto/list",
+						"/vehicle-type","/vehicle-type/list",
+						"/vehicle-manufacturer", "/vehicle-manufacturer/list",
+						"/department", "/department/list", "/department/all-for-selection",
+						"/vehicle-parts","/vehicle-parts/list",
+						"/processes/list",
+						"/draft/list",
+						"/draft/reject-list",
+						
+						"/draft/details/**",
+						
+						"/final-submit/list",
+						"/transport-review/with-mvi","/transport-review/without-mvi",
+						"/transport-placement/list",
+						"/transport-price-fixation/placed-before-vcc",
+						"/transport-action/heavy-vehicles",
+						"/transport-action/tendered-vehicles",
+						"/transport-action/scrapped-vehicles",
+						"/transport-allotment/priced", 
+						"/transport-lifting/allotted-list",
+						"/transport-lifting/lifted-vehicles",
+						"/transport-non-lifted/list",
+						"/role","/role/list",
+						"/pageUrl",
+						
+						"/reports/vehicle-report/**",
+						"/reports/allotment-letter/**",
+						"/reports/approved-vehicles-report",
+						
+						"/dates/approved",
+						"/dates/condemned-vehicle",
+						"/dates/circulated",
+						"/dates/allotted",
+						"/dates/tendered",
+						"/dates/lifted",
+						"/dates/scrapped",
+						"/dates/non-lifted"
+						)
 				.hasAnyAuthority( DA.name(), ADMIN.name(),TD.name())
 				
-				.requestMatchers(POST, "/users/change-password","/users/update","/draft","/final-submit")
+//				.requestMatchers(GET,
+//						"/reports/vehicle-report/**",
+//						"/reports/allotment-letter/**",
+//						"/reports/approved-vehicles-report"
+//				).hasAnyAuthority( ADMIN.name(), TD.name())
+				
+				.requestMatchers(POST, "/users/change-password","/users/update",
+						"/draft",
+						"/final-submit",
+						"/department/add-department",
+						"/districts/add-districts",
+						"/district-rto/add-district-rto",
+						"/financial-year/add-financial-year",
+						"/vehicle-manufacturer/add-vehicle-manufacturer",
+						"/vehicle-type/add-vehicle-type",
+						"/vehicle-parts/add-vehicle-parts",
+						"/processes/add-processes",
+						"/transport-review/approve", "/transport-review/reject/*",
+						"/transport-placement/place-before-vcc", 
+						"/transport-price-fixation/fixing-price",
+						"/transport-action/declare-scrap", 
+						"/transport-action/declare-tender", 
+						"/transport-allotment/allot", 
+						"/transport-lifting/lift",
+						"/role/add-role"
+						)
 				.hasAnyAuthority(DA.name(), ADMIN.name(), TD.name())
 
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

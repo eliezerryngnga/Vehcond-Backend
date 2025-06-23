@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class VehiclePartsConditionFinalId implements Serializable {
-    private String applicationcode;
+    private String applicationCode;
     private Integer vehiclepartcode;
 }

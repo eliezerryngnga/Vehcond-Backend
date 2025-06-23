@@ -1,4 +1,4 @@
-package vehcon.models.appdata;
+package vehcon.models.masters;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,22 +18,22 @@ public class PageUrl {
 	@Column(name="urlcode")
 	private Integer urlCode;
 	
-	@Column(name="pageurl")
+	@Column(name="pageurl", length = 100)
 	private String pageurl;
 	
-	@Column(name="subprocessname")
+	@Column(name="subprocessname", length = 100)
 	private String subProcessName;
 	
-	@Column(name="subprocessicon")
+	@Column(name="subprocessicon", length = 50)
 	private String subProcessIcon;
 	
-	@Column(name="processname")
+	@Column(name="processname", length = 100)
 	private String processName;
 	
-	@Column(name="processicon")
+	@Column(name="processicon", length = 50)
 	private String processIcon;
 	
 	@Column(name="showinmenu")
-	private boolean showInMenu;
+	private boolean showInMenu; 	
 
 }

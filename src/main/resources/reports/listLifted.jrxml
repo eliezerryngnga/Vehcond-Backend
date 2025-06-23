@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="listLifted" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f1e2d3c4-b5a6-f7e8-d9c0-b1a2c3d4e5f6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="YOUR_DATA_ADAPTER"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+
+	<!-- Centralized Styles for the Table -->
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+
+	<!-- Subdataset for the Table Data -->
+	<subDataset name="LiftedVehicleDataset" uuid="a2b3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7">
+		<field name="slno" class="java.lang.Long"/>
+		<field name="registrationno" class="java.lang.String"/>
+		<field name="departmentname" class="java.lang.String"/>
+		<field name="officename" class="java.lang.String"/>
+		<field name="vehicletypedescription" class="java.lang.String"/>
+		<field name="manufactureyear" class="java.lang.Integer"/>
+		<field name="purchasedate" class="java.time.LocalDate"/>
+		<field name="liftersname" class="java.lang.String"/>
+		<field name="liftersaddress" class="java.lang.String"/>
+		<field name="lifteddate" class="java.time.LocalDate"/>
+		<field name="remarks" class="java.lang.String"/>
+	</subDataset>
+
+	<!-- Fields for the Main Report (matching the subdataset) -->
+	<field name="slno" class="java.lang.Long"/>
+	<field name="registrationno" class="java.lang.String"/>
+	<field name="departmentname" class="java.lang.String"/>
+	<field name="officename" class="java.lang.String"/>
+	<field name="vehicletypedescription" class="java.lang.String"/>
+	<field name="manufactureyear" class="java.lang.Integer"/>
+	<field name="purchasedate" class="java.time.LocalDate"/>
+	<field name="liftersname" class="java.lang.String"/>
+	<field name="liftersaddress" class="java.lang.String"/>
+	<field name="lifteddate" class="java.time.LocalDate"/>
+	<field name="remarks" class="java.lang.String"/>
+
+	<title>
+		<band height="67" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="67" uuid="63677682-a309-4df7-8d06-d96227cb003b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[LIST OF LIFTED VEHICLES]]></text>
+			</staticText>
+		</band>
+	</title>
+
+	<summary>
+		<band height="70" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="802" height="70" uuid="b3c4d5e6-f7a8-b9c0-d1e2-f3a4b5c6d7e8">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="LiftedVehicleDataset" uuid="c4d5e6f7-a8b9-c0d1-e2f3-a4b5c6d7e8f9">
+						<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="30" uuid="018f6800-ffe6-4772-94dc-7ee79596dfbf">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="30" height="39" backcolor="#BFE1FF" uuid="d25164eb-48b0-4591-9e73-b26116854e43"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Sl no]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="30" height="33" uuid="e05de8c8-7f4c-47fc-8f64-46c59296538b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{slno}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="70" uuid="dcefb6e5-b1bb-40bd-8f15-a8ad3f771038">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="70" height="39" backcolor="#BFE1FF" uuid="7cf424f1-9ddb-4a57-b08e-5b169543e493"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Registration No]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="70" height="33" uuid="536ff175-4c07-42da-91ef-f62fbb1c7f99"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{registrationno}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="98" uuid="83149b12-d2b9-4414-aa9c-d18423d6030b">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="98" height="39" backcolor="#BFE1FF" uuid="2a9261ed-1df2-4740-8f96-24e5d6d84fde"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Department]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="98" height="33" uuid="7b21e860-65d4-48cd-b98a-24151a66a014"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{departmentname}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="107" uuid="f5829e78-76be-4491-a2e7-b3e23cddea56">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="107" height="39" backcolor="#BFE1FF" uuid="1c9f80a0-0624-4f05-8e7c-87d26425c276"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Office]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="107" height="33" uuid="e633d267-31bd-4d57-8ff7-160d2b1f3c39"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{officename}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="78" uuid="3e7e0806-09f4-48f4-9928-fc4776d83a58">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="78" height="39" backcolor="#BFE1FF" uuid="d6343510-bcae-42ef-8531-e14b5539d91f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Vehicle Type]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="78" height="33" uuid="ab863773-45a7-4b77-a8a2-2d1bb009c91b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{vehicletypedescription}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="69" uuid="40e819d3-fca2-46ba-a9ff-ed07aecbc2b0">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="69" height="39" backcolor="#BFE1FF" uuid="a6591741-f094-4346-857e-07e0b5f58c70"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Mfc. Year]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="69" height="33" uuid="a65b206c-54a8-48b8-b86a-74d39369b05c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{manufactureyear}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="58" uuid="00c46ef2-9a31-4f9b-96e4-354232d274ab">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="58" height="39" backcolor="#BFE1FF" uuid="93425026-66d4-4a5f-a2e6-9907c0825316"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Purchase Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="58" height="33" uuid="cc72e737-25e2-41ba-ac5c-99d8d646ab05"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{purchasedate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="83" uuid="4b781b18-23b1-4aea-bb95-6695c6b45c63">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="83" height="39" backcolor="#BFE1FF" uuid="6724a9ed-8461-4606-963d-4c5770513998"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Lifter's Name]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="83" height="33" uuid="7cf44c0b-044f-40e8-8a21-9311357f84eb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{liftersname}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="99" uuid="304c6ec6-8154-4a59-8102-bf05e6d9f197">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="99" height="39" backcolor="#BFE1FF" uuid="3d100d00-34d6-419b-a7e8-e568478479e3"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Lifter's Address]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="99" height="33" uuid="e6130b92-b695-442a-a9f9-7e50b1a1378f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{liftersaddress}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="72" uuid="f8715486-2af3-4a04-832d-935b4e6f22c3">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="72" height="39" backcolor="#BFE1FF" uuid="7a9f73eb-153d-4251-8ca6-0b1b1c6762fe"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Lifted Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="72" height="33" uuid="a65f97b6-b8ef-4155-ac10-096b48457788"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{lifteddate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="38" uuid="3e56f9bd-e36d-4003-aa18-723290edfd88">
+						<jr:columnHeader style="Table_CH" height="39">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="38" height="39" backcolor="#BFE1FF" uuid="0222a76f-40e1-45ec-9a99-b1d55d78a221"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Remark]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="33">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="38" height="33" uuid="559d8137-b76e-44d4-9d55-84089e5a1e80"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

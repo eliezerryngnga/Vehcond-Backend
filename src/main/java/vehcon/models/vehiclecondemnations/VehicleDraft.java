@@ -1,7 +1,6 @@
 package vehcon.models.vehiclecondemnations;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -120,7 +119,7 @@ public class VehicleDraft {
     @JoinColumn(name = "processcode", referencedColumnName ="processcode")
     private Processes processcode;
 
-    private LocalDateTime entrydate;
+    private LocalDate entrydate;
     
     @ManyToOne
     @JoinColumn(name = "financialyearcode", referencedColumnName = "financialyearcode")

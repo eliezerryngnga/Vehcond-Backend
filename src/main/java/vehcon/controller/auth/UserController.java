@@ -1,10 +1,10 @@
 package vehcon.controller.auth;
 
-import static vehcon.models.auth.Role.DA;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,13 +24,17 @@ import lombok.RequiredArgsConstructor;
 import vehcon.annotations.Auditable;
 import vehcon.dto.auth.ChangePasswordRequest;
 import vehcon.dto.auth.RegisterRequest;
+import vehcon.dto.auth.UserListDTO;
 import vehcon.exception.InternalServerError;
 import vehcon.exception.ObjectNotFoundException;
 import vehcon.exception.UnauthorizedException;
 import vehcon.models.auth.User;
+import vehcon.models.masters.Departments;
 import vehcon.repo.auth.UserRepository;
+import vehcon.repo.masters.DepartmentsRepository;
 import vehcon.services.appdata.CoreServices;
 import vehcon.services.auth.AuthenticationService;
+import vehcon.services.auth.UsersService;
 
 @RestController
 @RequestMapping(path = "/users", produces = "application/json")
@@ -40,6 +45,8 @@ public class UserController {
 	private final UserRepository userRepo;
 	private final AuthenticationService authService;
 	private final PasswordEncoder passwordEncoder;
+	private final UsersService usersService;
+	private final DepartmentsRepository deptRepo;
 	
 	@GetMapping("/profile")
 	public ResponseEntity<Map<String, Object>> getuserInfo(@AuthenticationPrincipal User user) {
@@ -49,12 +56,46 @@ public class UserController {
 			userInfo.put("username", user.getUsername());
 			userInfo.put("role", user.getRole());
 			userInfo.put("name", user.getName());
-			userInfo.put("departmentCode", user.getDepartmentCode());
+			userInfo.put("departmentCode", user.getDepartment().getDepartmentCode());
 
 			return new ResponseEntity<>(userInfo, HttpStatus.OK);
 
 		} catch (Exception ex) {
 			throw new InternalServerError("Unable to fetch user information", ex);
+		}
+	}
+	
+	@GetMapping("/list/enabled")
+	public ResponseEntity<Page<UserListDTO>> getEnabledUsers(
+			@RequestParam(name = "search", required = false) String globalSearchTerm,
+			Pageable pageable
+			)
+	{
+		try
+		{
+			Page<UserListDTO> enabledUsers = usersService.getAllEnabledUsers(globalSearchTerm, pageable);
+			return ResponseEntity.ok(enabledUsers);
+		}
+		catch(Exception e)
+		{
+			throw new InternalServerError("Unable to fetch user information ", e);
+		}
+	}
+	
+	@GetMapping("/list/disabled")
+	public ResponseEntity<Page<UserListDTO>> getDisabledUsers(
+			@RequestParam(name = "search", required = false) String globalSearchTerm,
+			Pageable pageable
+			)
+	{
+		try
+		{
+			Page<UserListDTO> disabledUsers = usersService.getAllDisabledUsers(globalSearchTerm, pageable);
+			return ResponseEntity.ok(disabledUsers);
+		}
+		catch(Exception e)
+		{
+			throw new InternalServerError("Unable to fetch user information ", e);
 		}
 	}
 	
@@ -96,7 +137,12 @@ public class UserController {
 			
 			User u = userRepo.findByUsername(user.getUsername()).orElseThrow(()->new ObjectNotFoundException("Invalid username"));
 			
-			u.setDepartmentCode(request.getDepartmentCode());
+			Departments dept = deptRepo.findById(request.getDepartmentCode())
+					.orElseThrow(() -> new ObjectNotFoundException("Invalid department code"));
+			
+			u.setDepartment(dept);
+			
+			//u.setDepartment(request.getDepartmentCode());
 			u.setName(request.getName());
 
 			map.put("detail", "Profile updated.");

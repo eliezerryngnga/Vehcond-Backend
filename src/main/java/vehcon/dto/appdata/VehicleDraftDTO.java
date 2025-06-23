@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class VehicleDraftDTO {
 	
+	private String applicationCode;
+	
     private Integer departmentCode;
     
     private String officeName;
@@ -38,7 +40,7 @@ public class VehicleDraftDTO {
 
 //    private String registrationNo;
 
-    private String rtoNo;
+    private String rtoCode;
     
     private String vehicleRegistrationNumber;
     
@@ -83,8 +85,6 @@ public class VehicleDraftDTO {
     private String mviremarks;
     
     private Integer financialYearCode;
-    
-//	private List<VehiclePartsConditionDraft> vehiclePartsDraft;
     
     private List<PartsConditionInputDTO> vehiclePartsDraft;
 

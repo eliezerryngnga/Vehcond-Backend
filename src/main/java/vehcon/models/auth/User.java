@@ -1,6 +1,5 @@
 package vehcon.models.auth;
 
-import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,11 +14,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vehcon.models.masters.Departments;
 
 @Data
 @Builder
@@ -39,8 +41,12 @@ public class User implements UserDetails{
 	
 	private String name;
 	
-	@Column(name="departmentcode")
-	private Integer departmentCode;
+//	@Column(name="departmentcode")
+//	private Integer departmentCode;
+	
+	@ManyToOne
+	@JoinColumn(name = "departmentcode", referencedColumnName = "departmentcode")
+	private Departments department;
 	
 	//@Column(name="rolecode")
 	//private Integer roleCode;	
@@ -84,7 +90,7 @@ public class User implements UserDetails{
 
 	  @Override
 	  public boolean isEnabled() {
-	    return true;
+	    return this.userAccess;
 	  }
 
 }

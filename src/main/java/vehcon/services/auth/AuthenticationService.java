@@ -15,8 +15,6 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,9 +54,11 @@ import vehcon.models.auth.PasswordResetToken;
 import vehcon.models.auth.Role;
 import vehcon.models.auth.Roles;
 import vehcon.models.auth.User;
+import vehcon.models.masters.Departments;
 import vehcon.repo.auth.PasswordTokenRepository;
 import vehcon.repo.auth.RolesRepository;
 import vehcon.repo.auth.UserRepository;
+import vehcon.repo.masters.DepartmentsRepository;
 import vehcon.services.appdata.CoreServices;
 
 @Slf4j
@@ -74,7 +74,7 @@ public class AuthenticationService {
 	private final PasswordTokenRepository passwordTokenRepo;
 	private final LoginRepository loginRepo;
 	private final RolesRepository rolesRepo;
-	
+	private final DepartmentsRepository deptRepo;
 	@Value("${keys.dir}")
 	private String keysDir;
 	
@@ -84,6 +84,9 @@ public class AuthenticationService {
 		
 		Optional<User> userr = userRepo.findByUsername(request.getUsername());
 
+		Departments department = deptRepo.findById(request.getDepartmentCode())
+				.orElseThrow(() -> new ObjectNotFoundException("Invalid department code"));
+		
 		if (userr.isPresent())
 			throw new InternalServerError("Username already registered");
 		
@@ -92,7 +95,7 @@ public class AuthenticationService {
 		//String pw = request.getPassword() == null ? "password" : decryptPassword(request.getPassword());			
 		String pw =request.getPassword();
 		var user = User.builder().name(request.getName())
-				.departmentCode(request.getDepartmentCode())
+				.department(department)
 				.username(request.getUsername()).password(passwordEncoder.encode(pw))
 				//.roleCode(request.getRoleCode())
 				.role(role).userAccess(true).build();

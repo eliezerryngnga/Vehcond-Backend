@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="allotmentLetter" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="p4q5r6s7-t8u9-v0w1-x2y3-z4a5b6c7d8e9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="YOUR_DATA_ADAPTER"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+
+	<!-- A simple style for consistent body text -->
+	<style name="BodyText" fontName="SansSerif" fontSize="10" isStyledText="true"/>
+
+	<!-- Fields for the Main Report - Assumes clean data from Java -->
+	<field name="letterNumber" class="java.lang.String"/>
+	<field name="letterDate" class="java.time.LocalDate"/>
+	<field name="registrationno" class="java.lang.String"/>
+	<field name="officename" class="java.lang.String"/>
+	<field name="locations" class="java.lang.String"/>
+	<field name="allotteesname" class="java.lang.String"/>
+	<field name="allotteesaddress" class="java.lang.String"/>
+	<field name="vcctcprice" class="java.lang.Integer"/>
+	<field name="departmentname" class="java.lang.String"/>
+
+	<title>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="13" width="555" height="33" uuid="e8d199f7-594a-4161-a256-619b6bf05cec"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GOVERNMENT OF MEGHALAYA
+TRANSPORT DEPARTMENT]]></text>
+			</staticText>
+		</band>
+	</title>
+	
+	<pageHeader>
+		<band height="30">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="270" height="20" uuid="a10d66a8-ad38-40f7-bbf0-add0b437688a"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["No. " + $F{letterNumber}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMM, yyyy" isBlankWhenNull="true">
+				<reportElement x="295" y="0" width="260" height="20" uuid="c2e1a50c-c7c6-4607-808f-cf3ce16c8a55"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{letterDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+
+	<detail>
+		<band height="250" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="50" height="20" uuid="3499797d-ff59-42e6-be77-d9c327b1be8e"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Subject:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="50" y="10" width="505" height="20" uuid="d7561ba0-4e1b-4192-a4e5-d544e5a348ba"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disposal/Allotment of Government Condemned Vehicles.]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight">
+				<reportElement style="BodyText" x="0" y="45" width="555" height="45" positionType="Float" uuid="bf6b27cb-5658-480a-94c4-7f16e6f9a139"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["With reference to the subject cited above, a Government condemned vehicle <style isBold='true'>" + $F{registrationno} + "</style> belonging to " + $F{officename} + " is allotted to <style isBold='true'>" + $F{allotteesname} + "</style> for his/her personal use on the following conditions."]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement style="BodyText" x="0" y="95" width="555" height="45" positionType="Float" uuid="27e774e8-7c60-4a10-be63-772ee6706771"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["1. The Vehicle will be released to him/her by the Department/Office concerned on payment of the amount of <style isBold='true'>₹ " + new java.text.DecimalFormat("#,##0").format($F{vcctcprice}) + "/-</style> being the Upset price of the vehicle fixed by the Vehicle Condemnation Committee minus 10% approved by Government."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="BodyText" x="0" y="145" width="555" height="20" positionType="Float" uuid="fd3d9d19-4468-4216-8557-7a0947563f24"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[2. The allottee should not sell the vehicle within a period of 2 (two) years from the date of purchase.]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight">
+				<reportElement style="BodyText" x="0" y="170" width="555" height="45" positionType="Float" uuid="5f9ed618-fa5b-4f9a-827b-a5926e8e4ffb"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["3. The Vehicle should be lifted within <style isBold='true'>1 (one) month</style> from the date of receipt of the allotment orders and if they fail to do so the allotment will stand automatically cancelled. No application for reduction of price or for extending the time of lifting will be entertained."]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	
+	<summary>
+		<band height="250">
+			<staticText>
+				<reportElement x="340" y="20" width="215" height="40" uuid="4f03c400-d6ff-4551-b498-96ce7407aff3"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Under Secretary to the Govt. of Meghalaya,
+Transport Department]]></text>
+			</staticText>
+			
+			<line>
+				<reportElement x="0" y="80" width="555" height="1" uuid="a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"/>
+			</line>
+			
+			<staticText>
+				<reportElement x="0" y="85" width="60" height="20" uuid="6ae9998d-3906-4adb-9158-ee6bbc3bc3c8"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Memo No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="85" width="235" height="20" uuid="4d6353a8-b374-4d8a-9b54-f076f6b83a90"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{letterNumber} + " (A)"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMM, yyyy">
+				<reportElement x="295" y="85" width="260" height="20" uuid="a308beff-66f2-4297-ba3a-960d81e82f35"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{letterDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="110" width="100" height="20" uuid="c7d8deec-7d7b-46df-96e3-a28bb9bbd2e3"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Copy to:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="135" width="277" height="15" uuid="6ed0b777-d7a2-4eb6-aba3-7651fdbb1375"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1. The Under Secretary, " + $F{departmentname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="150" width="277" height="15" uuid="14bbb866-d511-48ad-908c-2a6feea6f96d"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2. The " + $F{officename}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="0" y="165" width="277" height="30" uuid="df2dc45b-9dce-47af-a271-634f546839b9"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3. " + $F{allotteesname} + ",\n" + $F{allotteesaddress}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="340" y="195" width="215" height="40" uuid="eda8ae7a-1e8f-4105-b463-b318f3a8e5db"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[By Order etc.,
+
+Under Secretary to the Govt. of Meghalaya,
+Transport Department]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

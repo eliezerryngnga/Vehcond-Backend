@@ -1,7 +1,5 @@
 package vehcon.controller.auth;
 
-import static vehcon.models.auth.Role.DA;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,7 +109,7 @@ public class AuthenticationController {
 		try {
 			Map<String, String> map = new HashMap<>();
 			
-			request.setRole(DA);
+			//request.setRole(DA);
 			
 			authService.register(request);
 			map.put("detail", "User Registered.");
@@ -124,5 +122,4 @@ public class AuthenticationController {
 			throw new InternalServerError("Unable to register user", ex);
 		}
 	}
-
 }

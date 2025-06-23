@@ -18,6 +18,6 @@ public class VehicleType {
 	@Column(name = "vehicletypecode")
 	private Integer vehicleTypeCode;
 	
-	@Column(name = "vehicletypedescription")
+	@Column(name = "vehicletypedescription", length = 1000)
 	private String vehicletypedescription;
 }

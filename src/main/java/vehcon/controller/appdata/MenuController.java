@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import io.jsonwebtoken.io.IOException;
 import vehcon.exception.InternalServerError;
 import vehcon.exception.UnauthorizedException;
-import vehcon.models.appdata.PageUrl;
 import vehcon.models.auth.Roles;
 import vehcon.models.auth.User;
+import vehcon.models.masters.PageUrl;
 import vehcon.repo.auth.RolesRepository;
 import vehcon.services.appdata.MenuService;
 

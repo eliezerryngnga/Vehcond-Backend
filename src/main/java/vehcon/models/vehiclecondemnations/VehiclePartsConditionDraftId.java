@@ -1,11 +1,12 @@
 package vehcon.models.vehiclecondemnations;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import java.io.Serializable;
 
 @Embeddable
 @Data
@@ -13,6 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class VehiclePartsConditionDraftId implements Serializable {
-    private String applicationcode;
+    private String applicationCode;
     private Integer vehiclepartcode;
 }

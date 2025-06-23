@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vehicleDetails" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="r1s2t3u4-v5w6-x7y8-z9a0-b1c2d3e4f5g6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="YOUR_DATA_ADAPTER"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+
+	<style name="LabelStyle" vTextAlign="Middle">
+		<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+			<topPen lineWidth="0.5" lineStyle="Solid"/>
+			<leftPen lineWidth="0.5" lineStyle="Solid"/>
+			<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+			<rightPen lineWidth="0.5" lineStyle="Solid"/>
+		</box>
+	</style>
+	<style name="ValueStyle" style="LabelStyle" hTextAlign="Center"/>
+
+	<!-- Parameter remains the same -->
+	<parameter name="applicationcode" class="java.lang.String"/>
+	<parameter name="VehicleDetailsSubreport" class="net.sf.jasperreports.engine.JasperReport"/>
+	
+	<!-- Fields are cleaned up, assuming Java backend provides separate fields -->
+	<field name="departmentname" class="java.lang.String"/>
+	<field name="officerdesignation" class="java.lang.String"/>
+	<field name="premises" class="java.lang.String"/>
+	<field name="locations" class="java.lang.String"/>
+	<field name="directorateLetterNo" class="java.lang.String"/>
+	<field name="directorateLetterDate" class="java.time.LocalDate"/>
+	<field name="govtLetterNo" class="java.lang.String"/>
+	<field name="govtLetterDate" class="java.time.LocalDate"/>
+	<field name="vehicletypedescription" class="java.lang.String"/>
+	<field name="vehicledescription" class="java.lang.String"/>
+	<field name="vehiclemanufacturername" class="java.lang.String"/>
+	<field name="districtname" class="java.lang.String"/>
+	<field name="registrationno" class="java.lang.String"/>
+	<field name="engineno" class="java.lang.String"/>
+	<field name="chassisno" class="java.lang.String"/>
+	<field name="manufactureyear" class="java.lang.Integer"/>
+	<field name="purchasedate" class="java.time.LocalDate"/>
+	<field name="vehicleprice" class="java.lang.Integer"/>
+	<field name="totalkms" class="java.lang.Integer"/>
+	<field name="depreciatedamount" class="java.lang.Integer"/>
+	<field name="improvements" class="java.lang.String"/>
+	<field name="expenses" class="java.lang.Integer"/>
+	<field name="repairexpenses" class="java.lang.Integer"/>
+	<field name="repairslastsixmonths" class="java.lang.Integer"/>
+	<field name="whetheraccident" class="java.lang.String"/>
+	<field name="accidentcaseresolved" class="java.lang.String"/>
+	<field name="comments" class="java.lang.String"/>
+	<field name="mvireportavailable" class="java.lang.String"/>
+	<field name="battery" class="java.lang.String"/>
+	<field name="tyres" class="java.lang.String"/>
+	<field name="accidentdamage" class="java.lang.String"/>
+	<field name="mviprice" class="java.lang.Integer"/>
+	<field name="mviremarks" class="java.lang.String"/>
+	<field name="parts" class="java.util.List"/>
+
+	<title>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="60" uuid="ab4f103f-8884-469a-8a15-bbfa6878a70d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[VEHICLE DETAILS]]></text>
+			</staticText>
+		</band>
+	</title>
+	
+	<detail>
+		<!-- This band contains all general information -->
+		<band height="550" splitType="Prevent">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="550" uuid="frame-1"/>
+				<!-- Each key-value pair is a set of staticText and textField -->
+				<!-- They will flow automatically due to positionType="Float" -->
+				<staticText>
+					<reportElement style="LabelStyle" x="0" y="0" width="255" height="20" uuid="label-1"/>
+					<text><![CDATA[Name of department]]></text>
+				</staticText>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement style="ValueStyle" x="255" y="0" width="300" height="20" uuid="value-1"/>
+					<textFieldExpression><![CDATA[$F{departmentname}]]></textFieldExpression>
+				</textField>
+
+				<!-- All other fields follow the same Label/Value pattern -->
+				<!-- Example for address which might wrap -->
+				<staticText>
+					<reportElement style="LabelStyle" stretchType="RelativeToTallestObject" x="0" y="20" width="255" height="30" positionType="Float" uuid="label-2"/>
+					<text><![CDATA[Present location/Address]]></text>
+				</staticText>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement style="ValueStyle" stretchType="RelativeToTallestObject" x="255" y="20" width="300" height="30" positionType="Float" uuid="value-2"/>
+					<textFieldExpression><![CDATA[($F{premises} == null ? "" : $F{premises} + ", ") + $F{locations}]]></textFieldExpression>
+				</textField>
+				
+				<!-- ... This pattern continues for all 20+ fields ... -->
+				<!-- Example for Directorate Letter No/Date -->
+				<staticText>
+					<reportElement style="LabelStyle" x="0" y="50" width="255" height="20" positionType="Float" uuid="label-3"/>
+					<text><![CDATA[Directorate Letter No.]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement style="ValueStyle" x="255" y="50" width="300" height="20" positionType="Float" uuid="value-3"/>
+					<textFieldExpression><![CDATA[$F{directorateLetterNo}]]></textFieldExpression>
+				</textField>
+
+				<staticText>
+					<reportElement style="LabelStyle" x="0" y="70" width="255" height="20" positionType="Float" uuid="label-4"/>
+					<text><![CDATA[Directorate Letter Date]]></text>
+				</staticText>
+				<textField pattern="dd MMMM, yyyy" isBlankWhenNull="true">
+					<reportElement style="ValueStyle" x="255" y="70" width="300" height="20" positionType="Float" uuid="value-4"/>
+					<textFieldExpression><![CDATA[$F{directorateLetterDate}]]></textFieldExpression>
+				</textField>
+
+				<!-- Example for a Yes/No field -->
+				<staticText>
+					<reportElement style="LabelStyle" x="0" y="90" width="255" height="20" positionType="Float" uuid="label-5"/>
+					<text><![CDATA[Whether the vehicle met with an accident]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement style="ValueStyle" x="255" y="90" width="300" height="20" positionType="Float" uuid="value-5"/>
+					<textFieldExpression><![CDATA["Y".equals($F{whetheraccident}) ? "Yes" : "No"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+
+		<!-- This band contains the MVI specific information, and ONLY prints if available -->
+		<band height="250">
+			<printWhenExpression><![CDATA["Y".equals($F{mvireportavailable})]]></printWhenExpression>
+			<frame>
+				<reportElement x="0" y="10" width="555" height="240" uuid="frame-mvi"/>
+				<staticText>
+					<reportElement x="0" y="0" width="555" height="20" uuid="mvi-header"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[MVI REPORT DETAILS]]></text>
+				</staticText>
+				
+				<!-- MVI specific fields in a 2-column layout -->
+				<staticText>
+					<reportElement style="LabelStyle" x="0" y="30" width="255" height="20" uuid="label-mvi-1"/>
+					<text><![CDATA[Battery Details]]></text>
+				</staticText>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement style="ValueStyle" x="255" y="30" width="300" height="20" uuid="value-mvi-1"/>
+					<textFieldExpression><![CDATA[$F{battery}]]></textFieldExpression>
+				</textField>
+				
+				<!-- Subreport for parts is placed here -->
+				<subreport>
+					<reportElement x="0" y="60" width="555" height="30" positionType="Float" uuid="subreport-1"/>
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{parts})]]></dataSourceExpression>
+					<subreportExpression><![CDATA[$P{VehicleDetailsSubreport}]]></subreportExpression>
+				</subreport>
+				
+				<!-- Signature section for MVI -->
+				<staticText>
+					<reportElement x="0" y="210" width="100" height="20" positionType="Float" uuid="mvi-date-label"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="455" y="210" width="100" height="20" positionType="Float" uuid="mvi-sig-label"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Signature]]></text>
+				</staticText>
+			</frame>
+		</band>
+		
+		<!-- This band ONLY prints if MVI report is NOT available -->
+		<band height="50">
+			<printWhenExpression><![CDATA["N".equals($F{mvireportavailable})]]></printWhenExpression>
+			<frame>
+				<reportElement x="0" y="10" width="555" height="40" uuid="frame-no-mvi"/>
+				<staticText>
+					<reportElement x="0" y="10" width="100" height="20" uuid="no-mvi-date-label"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="455" y="10" width="100" height="20" uuid="no-mvi-sig-label"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Signature]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>
