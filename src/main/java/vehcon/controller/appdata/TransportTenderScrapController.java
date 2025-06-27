@@ -1,5 +1,7 @@
 package vehcon.controller.appdata;
 
+
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import vehcon.dto.appdata.ScrapDTO;
 import vehcon.dto.appdata.TenderVehiclesDTO;
 import vehcon.dto.appdata.VehicleDraftListDTO;
@@ -25,6 +28,7 @@ import vehcon.services.appdata.TransportService;
 @RestController
 @RequestMapping("/transport-action")
 @RequiredArgsConstructor
+@Slf4j
 public class TransportTenderScrapController {
 	
 	private final TransportService transportService;
@@ -90,17 +94,20 @@ public class TransportTenderScrapController {
 	@GetMapping("/tendered-vehicles")
 	public ResponseEntity<?> getTenderedVehicles(
 			@RequestParam(value="search", required = false) String searchTerm,
+			@RequestParam(required = false) Integer year,
+			@RequestParam(required = false) Integer month,
 			Pageable pageable,
 			@AuthenticationPrincipal User user
 			)
 	{
 		try
 		{
-			Page<VehicleDraftListDTO> tenderedVehicles = transportService.getTenderedVehicles(searchTerm, pageable, user);
+			Page<VehicleDraftListDTO> tenderedVehicles = transportService.getTenderedVehicles(searchTerm, year, month, pageable, user);
 			return ResponseEntity.ok(tenderedVehicles);
 		}
 		catch(Exception e)
 		{
+			log.error("An error occurred while fetching ", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("An error occurred while fetching Tendered Vehicles");
 		}
@@ -109,17 +116,20 @@ public class TransportTenderScrapController {
 	@GetMapping("/scrapped-vehicles")
 	public ResponseEntity<?> getScrappedVehicles(
 			@RequestParam(value="search", required = false) String searchTerm,
+			@RequestParam(required = false) Integer year,
+			@RequestParam(required = false) Integer month,
 			Pageable pageable,
 			@AuthenticationPrincipal User user
 			)
 	{
 		try
 		{
-			Page<VehicleDraftListDTO> scrappedVehicles = transportService.getScrappedVehicles(searchTerm, pageable, user);
+			Page<VehicleDraftListDTO> scrappedVehicles = transportService.getScrappedVehicles(searchTerm, year, month, pageable, user);
 			return ResponseEntity.ok(scrappedVehicles);
 		}
 		catch(Exception e)
 		{
+			log.error("An error occurred while fetching ", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("An error occurred while fetching Scrapped Vehicles");
 		}

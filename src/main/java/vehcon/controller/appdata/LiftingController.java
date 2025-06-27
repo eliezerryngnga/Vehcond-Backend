@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import vehcon.dto.appdata.LiftingDTO;
 import vehcon.dto.appdata.VehicleDraftListDTO;
 import vehcon.models.appdata.VehicleFinal;
@@ -24,6 +25,7 @@ import vehcon.services.appdata.TransportService;
 @RestController
 @RequestMapping("/transport-lifting")
 @RequiredArgsConstructor
+@Slf4j
 public class LiftingController {
 	
 	private final TransportService transportService;
@@ -31,17 +33,20 @@ public class LiftingController {
 	@GetMapping("/allotted-list")
 	public ResponseEntity<?> allottedVehicles(
 			@RequestParam(value ="search",required = false) String searchTerm,
+			@RequestParam(required = false) Integer year,
+			@RequestParam(required = false) Integer month,
 			Pageable pageable,
 			@AuthenticationPrincipal User user
 			)
 	{
 		try
 		{
-			Page<VehicleDraftListDTO> vehicles = transportService.getAllottedVehicles(searchTerm, pageable, user);
+			Page<VehicleDraftListDTO> vehicles = transportService.getAllottedVehicles(searchTerm, year, month, pageable, user);
 			return ResponseEntity.ok(vehicles);
 		}
 		catch(Exception e)
 		{
+			log.error("An error occurred while retrieving the vehicles", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("An unexpected error occured while retrieving Allotted Vehicles");
 		}
@@ -69,13 +74,15 @@ public class LiftingController {
 	@GetMapping("/lifted-vehicles")
 	public ResponseEntity<?> getLiftedVehicles(
 			@RequestParam(value = "search", required = false) String searchTerm,
+			@RequestParam(required = false) Integer year,
+			@RequestParam(required = false ) Integer month,
 			Pageable pageable,
 			@AuthenticationPrincipal User user
 			)
 	{
 		try
 		{
-			Page<VehicleDraftListDTO> liftedVehicles = transportService.getLiftedVehicles(searchTerm, pageable, user);
+			Page<VehicleDraftListDTO> liftedVehicles = transportService.getLiftedVehicles(searchTerm, year, month, pageable, user);
 			return ResponseEntity.ok(liftedVehicles);
 		}
 		catch(Exception e)

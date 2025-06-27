@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import vehcon.dto.appdata.PlacedBeforeVccRequestDTO;
 import vehcon.dto.appdata.VehicleDraftListDTO;
 import vehcon.models.appdata.VehicleFinal;
+import vehcon.models.auth.User;
 import vehcon.services.appdata.TransportService;
 
 @RestController
@@ -31,16 +33,25 @@ public class PriceFixationController {
 	@GetMapping("/placed-before-vcc")
 	public ResponseEntity<?> getVehiclePlacedBeforeVcc(
 			@RequestParam(value = "search", required = false) String searchTerm,
-			Pageable pageable
+			@RequestParam(required = false) Integer year, 
+			@RequestParam(required = false) Integer month,
+			Pageable pageable,
+			@AuthenticationPrincipal User user
 			)
 	{
 		try
 		{
-			Page<VehicleDraftListDTO> placedVehicles = transportService.getVehiclesPlacedBeforeVcc(searchTerm, pageable);
+			Page<VehicleDraftListDTO> placedVehicles = transportService.getVehiclesPlacedBeforeVcc(
+					searchTerm, 
+					year, 
+					month,
+					pageable,
+					user);
 			return ResponseEntity.ok(placedVehicles);
 		}
 		catch(Exception e)
 		{
+			log.error("An error occurred while fetching: ", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("An unexpected error occured while retrieving Placed Vehicles");
 		}

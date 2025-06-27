@@ -2,11 +2,14 @@ package vehcon.models.appdata;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -155,4 +158,26 @@ public class VehicleFinal {
 
     @Column(name="versionflagcode")
     private String versionflagcode;
+    
+    @OneToOne(mappedBy = "vehicleFinal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Verification verification;
+    
+    @OneToOne(mappedBy = "vehicleFinal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Vcctc vcctc;
+    
+    @OneToOne(mappedBy = "vehicleFinal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private VcctcTemp vcctcTemp;
+    
+    @OneToOne(mappedBy = "vehicleFinal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AllottedVehicle allottedVehicle;
+    
+    @OneToOne(mappedBy = "vehicleFinal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private LiftedVehicles liftedVehicles;
+    
+    @OneToOne(mappedBy = "vehicleFinal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Scrap scrapVehicles;
+    
+    @OneToOne(mappedBy = "vehicleFinal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private TenderVehicles tenderVehicles;
+    
 }

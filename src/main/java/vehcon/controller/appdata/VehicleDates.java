@@ -10,21 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import vehcon.services.appdata.TransportService;
 
 @RestController
 @RequestMapping("/dates")
 @RequiredArgsConstructor
+@Slf4j
 public class VehicleDates {
 	
 	private final TransportService transportService;
-	
-	private static final int PROCESS_CODE_DRAFT = 1;
-	
-	private static final int PROCESS_CODE_REJECT_VEHICLE = 14;
-	
-	private static final int PROCESS_CODE_SUBMITTED_TO_TRANSPORT = 15;
-	
+		
 	private static final int PROCESS_CODE_APPROVED_BY_TRANSPORT = 2; //For 3a.
 	
 	private static final int PROCESS_CODE_PLACED_BEFORE_VCC = 3; //3b.
@@ -60,11 +56,12 @@ public class VehicleDates {
     {
     	try
     	{
-    		List<Map<String, Object>> dates = transportService.getAvailableDatesByProcessCode(PROCESS_CODE_PLACED_BEFORE_VCC);
+    		List<Map<String, Object>> dates = transportService.getAvailableVcctcTempDatesByProcessCode(PROCESS_CODE_PLACED_BEFORE_VCC);
     		return ResponseEntity.ok(dates);
     	}
     	catch(Exception e)
     	{
+    		log.error("An error occurred while fetching available dates: ", e);
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching available dates");
     	}
     }
@@ -74,11 +71,12 @@ public class VehicleDates {
     {
     	try
     	{
-    		List<Map<String, Object>> dates = transportService.getAvailableDatesByProcessCode(PROCESS_CODE_PRICE_FIXED_BY_TC);
+    		List<Map<String, Object>> dates = transportService.getAvailableVcctcDatesByProcessCode(PROCESS_CODE_PRICE_FIXED_BY_TC);
     		return ResponseEntity.ok(dates);
     	}
     	catch(Exception e)
     	{
+    		log.error("An error occurred while fetching available dates: ", e);
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching available dates");
     	}
     }
@@ -88,7 +86,7 @@ public class VehicleDates {
     {
     	try
     	{
-    		List<Map<String, Object>> dates = transportService.getAvailableDatesByProcessCode(PROCESS_CODE_ALLOTMENT_OF_VEHICLE);
+    		List<Map<String, Object>> dates = transportService.getAllottedVehicleAvailableDates(PROCESS_CODE_ALLOTMENT_OF_VEHICLE);
     		return ResponseEntity.ok(dates);
     	}
     	catch(Exception e)
@@ -102,7 +100,7 @@ public class VehicleDates {
     {
     	try
     	{
-    		List<Map<String, Object>> dates = transportService.getAvailableDatesByProcessCode(PROCESS_CODE_FOR_TENDER);
+    		List<Map<String, Object>> dates = transportService.getAvailableTenderedDatesByProcessCode(PROCESS_CODE_FOR_TENDER);
     		return ResponseEntity.ok(dates);
     	}
     	catch(Exception e)
@@ -116,7 +114,7 @@ public class VehicleDates {
     {
     	try
     	{
-    		List<Map<String, Object>> dates = transportService.getAvailableDatesByProcessCode(PROCESS_CODE_LIFTED_VEHICLE);
+    		List<Map<String, Object>> dates = transportService.getLiftedVehicleAvailableDates(PROCESS_CODE_LIFTED_VEHICLE);
     		return ResponseEntity.ok(dates);
     	}
     	catch(Exception e)
@@ -130,7 +128,7 @@ public class VehicleDates {
     {
     	try
     	{
-    		List<Map<String, Object>> dates = transportService.getAvailableDatesByProcessCode(PROCESS_CODE_FOR_SCRAP_TC);
+    		List<Map<String, Object>> dates = transportService.getAvailableScrappedDatesByProcessCode(PROCESS_CODE_FOR_SCRAP_TC);
     		return ResponseEntity.ok(dates);
     	}
     	catch(Exception e)

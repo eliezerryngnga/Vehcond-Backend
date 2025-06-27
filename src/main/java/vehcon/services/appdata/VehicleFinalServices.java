@@ -144,7 +144,7 @@ public class VehicleFinalServices {
 	          String rtoCode = vehicleDraftDTO.getRtoCode() != null ? vehicleDraftDTO.getRtoCode() : "";
 	          String vehicleRegNo = vehicleDraftDTO.getVehicleRegistrationNumber() != null ? vehicleDraftDTO.getVehicleRegistrationNumber() : "";
 	          if (!rtoCode.isEmpty() || !vehicleRegNo.isEmpty()) {
-	               vehicleFinal.setRegistrationNo(rtoCode + "|" + vehicleRegNo);
+	               vehicleFinal.setRegistrationNo(rtoCode + " " + vehicleRegNo);
 	          } else {
 	               vehicleFinal.setRegistrationNo(null);
 	          }

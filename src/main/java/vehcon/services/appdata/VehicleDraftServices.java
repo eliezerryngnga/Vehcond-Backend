@@ -161,7 +161,7 @@ public class VehicleDraftServices {
 	          String rtoCode = vehicleDraftDTO.getRtoCode() != null ? vehicleDraftDTO.getRtoCode() : "";
 	          String vehicleRegNo = vehicleDraftDTO.getVehicleRegistrationNumber() != null ? vehicleDraftDTO.getVehicleRegistrationNumber() : "";
 	          if (!rtoCode.isEmpty() || !vehicleRegNo.isEmpty()) {
-	               vehicleDraft.setRegistrationNo(rtoCode + "|" + vehicleRegNo);
+	               vehicleDraft.setRegistrationNo(rtoCode + " " + vehicleRegNo);
 	          } else {
 	               vehicleDraft.setRegistrationNo(null);
 	          }
@@ -354,10 +354,56 @@ public class VehicleDraftServices {
         }
 
         // Updated parsing logic assuming "|" as separator
+//        if (vehDraft.getRegistrationNo() != null && !vehDraft.getRegistrationNo().trim().isEmpty()) {
+//            String[] regParts = vehDraft.getRegistrationNo().split("\\s+", 2); // Split by |
+//            dto.setRtoCode(regParts.length > 0 ? regParts[0] : null);
+//            dto.setVehicleRegistrationNumber(regParts.length > 1 ? regParts[1] : null);
+//        }
+        
+//        if (vehDraft.getRegistrationNo() != null && !vehDraft.getRegistrationNo().trim().isEmpty()) {
+//            String[] regParts = vehDraft.getRegistrationNo().trim().split("\\s+"); // Split by |
+//            if(regParts.length >= 2)
+//            {
+//            	dto.setRtoCode(regParts[0] + " " + regParts[1]);
+//            	
+//            	if(regParts.length > 2)
+//            	{
+//            		dto.setVehicleRegistrationNumber( String.join(" ", Arrays.copyOfRange(regParts, 2, regParts.length)));
+//            	}
+//            	else
+//            	{
+//            		dto.setVehicleRegistrationNumber(null);
+//            	}
+//            }else{
+//            	dto.setRtoCode(null);
+//                dto.setVehicleRegistrationNumber(vehDraft.getRegistrationNo().trim());
+//            }
+//            dto.setRtoCode(regParts.length > 0 ? regParts[0] : null);
+//            dto.setVehicleRegistrationNumber(regParts.length > 1 ? regParts[1] : null);
+//        }
+        
         if (vehDraft.getRegistrationNo() != null && !vehDraft.getRegistrationNo().trim().isEmpty()) {
-            String[] regParts = vehDraft.getRegistrationNo().split("\\|", 2); // Split by |
-            dto.setRtoCode(regParts.length > 0 ? regParts[0] : null);
-            dto.setVehicleRegistrationNumber(regParts.length > 1 ? regParts[1] : null);
+            String fullRegNo = vehDraft.getRegistrationNo().trim();
+
+            // Find the first space
+            int firstSpaceIndex = fullRegNo.indexOf(' ');
+
+            // Find the second space, starting the search after the first one
+            int secondSpaceIndex = -1;
+            if (firstSpaceIndex != -1) {
+                secondSpaceIndex = fullRegNo.indexOf(' ', firstSpaceIndex + 1);
+            }
+            
+            // If a second space exists, we can split correctly
+            if (secondSpaceIndex != -1) {
+                dto.setRtoCode(fullRegNo.substring(0, secondSpaceIndex));
+                dto.setVehicleRegistrationNumber(fullRegNo.substring(secondSpaceIndex + 1).trim());
+            } else {
+                // Handle cases with less than two spaces (e.g., "ML 04" or "Something")
+                // You could assign the whole string to the RTO code or the number, depending on your business logic.
+                dto.setRtoCode(fullRegNo);
+                dto.setVehicleRegistrationNumber(null);
+            }
         }
         
         if (vehDraft.getLocations() != null && !vehDraft.getLocations().trim().isEmpty()) {

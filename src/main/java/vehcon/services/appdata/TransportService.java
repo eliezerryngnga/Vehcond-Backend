@@ -1,10 +1,13 @@
 package vehcon.services.appdata;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +35,7 @@ import vehcon.dto.appdata.ScrapDTO;
 import vehcon.dto.appdata.TenderVehiclesDTO;
 import vehcon.dto.appdata.VehicleDraftListDTO;
 import vehcon.dto.appdata.YearMonthDTO;
+import vehcon.dto.appdata.YearMonthProjection;
 import vehcon.models.appdata.AllottedVehicle;
 import vehcon.models.appdata.LiftedVehicles;
 import vehcon.models.appdata.Scrap;
@@ -68,7 +72,7 @@ public class TransportService {
 	
 	private static final int PROCESS_CODE_SUBMITTED_TO_TRANSPORT = 15;
 	
-	private static final int PROCESS_CODE_APPROVED_BY_TRANSPORT = 2; //For 3a.
+	private static final int PROCESS_CODE_APPROVED_BY_TRANSPORT = 2;
 	
 	private static final int PROCESS_CODE_PLACED_BEFORE_VCC = 3; //3b.
 	
@@ -258,7 +262,7 @@ public class TransportService {
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_APPROVED_BY_TRANSPORT))
 				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields))
-				.and(VehicleSpecifications.dateIsWithin(year, month, "entrydate"));
+				.and(VehicleSpecifications.hasVerificationDateIn(year, month));
 		
 		if (!userHasAnyRole(user, "ADMIN", "TD")) {
 		    Integer deptCode = user.getDepartment() != null ? user.getDepartment().getDepartmentCode() : null;
@@ -320,13 +324,24 @@ public class TransportService {
 	@Transactional(readOnly = true)
 	public Page<VehicleDraftListDTO> getVehiclesPlacedBeforeVcc(
 			String searchTerm,
-			Pageable pageable
+			Integer year,
+			Integer month,
+			Pageable pageable,
+			User user
 			)
 	{
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_PLACED_BEFORE_VCC))
-				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields));
+				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields))
+				.and(VehicleSpecifications.hasVcctcTempDateIn(year, month));
 		
+		if (!userHasAnyRole(user, "ADMIN", "TD")) {
+		    Integer deptCode = user.getDepartment() != null ? user.getDepartment().getDepartmentCode() : null;
+		    if (deptCode == null) {
+		        throw new AccessDeniedException("User does not have a department assigned.");
+		    }
+		    finalSpec = finalSpec.and(VehicleSpecifications.isInDepartment(deptCode));
+		}
 		return findAndMapVehicles(finalSpec, pageable);	
 	}
 	
@@ -439,13 +454,17 @@ public class TransportService {
 	@Transactional(readOnly = true)
 	public Page<VehicleDraftListDTO> getPricedVehicles(
 			String searchTerm,
+			Integer year,
+			Integer month,
 			Pageable pageable,
 			User user
 			)
 	{
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_PRICE_FIXED_BY_TC))
-				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields));
+				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields))
+				.and(VehicleSpecifications.hasVcctcDateIn(year, month));
+		
 		if (!userHasAnyRole(user, "ADMIN", "TD")) {
 		    Integer deptCode = user.getDepartment() != null ? user.getDepartment().getDepartmentCode() : null;
 		    if (deptCode == null) {
@@ -597,13 +616,16 @@ public class TransportService {
 	@Transactional(readOnly = true)
     public Page<VehicleDraftListDTO> getAllottedVehicles(
 			String searchTerm,
+			Integer year,
+			Integer month,
 			Pageable pageable,
 			User user
 			)
 	{
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_ALLOTMENT_OF_VEHICLE))
-				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields));
+				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields))
+				.and(VehicleSpecifications.hasAllottedVehiclesDateIn(year, month));
 		
 		if (!userHasAnyRole(user, "ADMIN", "TD")) {
 		    Integer deptCode = user.getDepartment() != null ? user.getDepartment().getDepartmentCode() : null;
@@ -681,14 +703,16 @@ public class TransportService {
 	@Transactional(readOnly = true)
     public Page<VehicleDraftListDTO> getTenderedVehicles(
 			String searchTerm,
+			Integer year,
+			Integer month,
 			Pageable pageable,
-			
 			User user
 			)
 	{
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_FOR_TENDER))
-				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields));
+				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields))
+			.and(VehicleSpecifications.hasTenderedDateIn(year, month));
 		
 		if (!userHasAnyRole(user, "ADMIN", "TD")) {
 		    Integer deptCode = user.getDepartment() != null ? user.getDepartment().getDepartmentCode() : null;
@@ -704,13 +728,16 @@ public class TransportService {
 	@Transactional(readOnly = true)
     public Page<VehicleDraftListDTO> getScrappedVehicles(
 			String searchTerm,
+			Integer year,
+			Integer month,
 			Pageable pageable,
 			User user
 			)
 	{
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_FOR_SCRAP_TC))
-				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields));
+				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields))
+				.and(VehicleSpecifications.hasScrapperDateIn(year, month));
 		
 		if (!userHasAnyRole(user, "ADMIN", "TD")) {
 		    Integer deptCode = user.getDepartment() != null ? user.getDepartment().getDepartmentCode() : null;
@@ -726,13 +753,17 @@ public class TransportService {
 	@Transactional(readOnly = true)
     public Page<VehicleDraftListDTO> getLiftedVehicles(
 			String searchTerm,
+			Integer year,
+			Integer month,
 			Pageable pageable,
 			User user
 			)
 	{
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_LIFTED_VEHICLE))
-				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields));
+				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields))
+				.and(VehicleSpecifications.hasLiftedVehiclesDateIn(year, month));
+		
 		
 		if (!userHasAnyRole(user, "ADMIN", "TD")) {
 		    Integer deptCode = user.getDepartment() != null ? user.getDepartment().getDepartmentCode() : null;
@@ -755,13 +786,16 @@ public class TransportService {
 		Specification<VehicleFinal> finalSpec = Specification
 				.where(VehicleSpecifications.hasProcessCode(PROCESS_CODE_NON_LIFTED_VEHICLE))
 				.and(VehicleSpecifications.hasSearchTerm(searchTerm, searchableFields));
+		
 		return findAndMapVehicles(finalSpec, pageable);
 	}
 	
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> getAvailableDatesByProcessCode(Integer processCode)
 	{
-		List<YearMonthDTO> flatDates = vehicleFinalRepo.findDistinctYearAndMonthOfVehicles(processCode);
+		List<YearMonthDTO> flatDates = verificationRepo.findDistinctYearAndMonthByProcessCode(processCode);
+		
+		log.info("Raw dates from repository before grouping: {}", flatDates);
 		
 		Map<Integer, List<Integer>> groupedByYear = flatDates.stream().collect(Collectors.groupingBy(YearMonthDTO::getYear, 
 				Collectors.mapping(YearMonthDTO::getMonth, Collectors.toList())));
@@ -772,14 +806,144 @@ public class TransportService {
 			months.sort(Collections.reverseOrder());
 			
 			finalResult.add(Map.of("year", year, "months",months));
-			
-			
+
 		});
 		
 		 finalResult.sort((a, b) -> Integer.compare((Integer) b.get("year"), (Integer) a.get("year")));
 
-		    // 4. Return the fully transformed list.
-		    return finalResult;
+		 return finalResult;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> getAllottedVehicleAvailableDates(Integer processCode)
+	{
+		List<YearMonthDTO> flatDates = allottedVehicleRepo.findAllottedDistinctYearAndMonthByProcessCode(processCode);
+		
+		log.info("Raw dates from repository before grouping: {}", flatDates);
+		
+		Map<Integer, List<Integer>> groupedByYear = flatDates.stream().collect(Collectors.groupingBy(YearMonthDTO::getYear, 
+				Collectors.mapping(YearMonthDTO::getMonth, Collectors.toList())));
+		
+		List<Map<String, Object>> finalResult = new ArrayList<>();
+		
+		groupedByYear.forEach((year, months) -> {
+			months.sort(Collections.reverseOrder());
+			
+			finalResult.add(Map.of("year", year, "months",months));
+
+		});
+		
+		 finalResult.sort((a, b) -> Integer.compare((Integer) b.get("year"), (Integer) a.get("year")));
+
+		 return finalResult;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> getLiftedVehicleAvailableDates(Integer processCode)
+	{
+		List<YearMonthDTO> flatDates = liftedVehicleRepo.findLiftedDistinctYearAndMonthByProcessCode(processCode);
+		
+		log.info("Raw dates from repository before grouping: {}", flatDates);
+		
+		Map<Integer, List<Integer>> groupedByYear = flatDates.stream().collect(Collectors.groupingBy(YearMonthDTO::getYear, 
+				Collectors.mapping(YearMonthDTO::getMonth, Collectors.toList())));
+		
+		List<Map<String, Object>> finalResult = new ArrayList<>();
+		
+		groupedByYear.forEach((year, months) -> {
+			months.sort(Collections.reverseOrder());
+			
+			finalResult.add(Map.of("year", year, "months",months));
+
+		});
+		
+		 finalResult.sort((a, b) -> Integer.compare((Integer) b.get("year"), (Integer) a.get("year")));
+
+		 return finalResult;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> getAvailableVcctcTempDatesByProcessCode(Integer processCode)
+	{
+	
+	    List<YearMonthProjection> flatDates = vcctcTempRepo.findVcctcTempYearAndMonthFromLetterNoDate(processCode);
+
+	    Map<Integer, List<Integer>> groupedByYear = flatDates.stream().collect(Collectors.groupingBy(YearMonthProjection::getYear,
+	            Collectors.mapping(YearMonthProjection::getMonth, Collectors.toList())));
+
+	    List<Map<String, Object>> finalResult = new ArrayList<>();
+
+	    groupedByYear.forEach((year, months) -> {
+	        months.sort(Collections.reverseOrder());
+	        finalResult.add(Map.of("year", year, "months", months));
+	    });
+
+	    finalResult.sort((a, b) -> Integer.compare((Integer) b.get("year"), (Integer) a.get("year")));
+
+	    return finalResult;
+	}
+
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> getAvailableVcctcDatesByProcessCode(Integer processCode)
+	{
+	
+	    List<YearMonthProjection> flatDates = vcctcRepo.findVcctcYearAndMonthFromLetterNoDate(processCode);
+
+	    Map<Integer, List<Integer>> groupedByYear = flatDates.stream().collect(Collectors.groupingBy(YearMonthProjection::getYear,
+	            Collectors.mapping(YearMonthProjection::getMonth, Collectors.toList())));
+
+	    List<Map<String, Object>> finalResult = new ArrayList<>();
+
+	    groupedByYear.forEach((year, months) -> {
+	        months.sort(Collections.reverseOrder());
+	        finalResult.add(Map.of("year", year, "months", months));
+	    });
+
+	    finalResult.sort((a, b) -> Integer.compare((Integer) b.get("year"), (Integer) a.get("year")));
+
+	    return finalResult;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> getAvailableScrappedDatesByProcessCode(Integer processCode)
+	{
+	
+	    List<YearMonthProjection> flatDates = scrapRepo.findScrappedYearAndMonthFromLetterNoDate(processCode);
+
+	    Map<Integer, List<Integer>> groupedByYear = flatDates.stream().collect(Collectors.groupingBy(YearMonthProjection::getYear,
+	            Collectors.mapping(YearMonthProjection::getMonth, Collectors.toList())));
+
+	    List<Map<String, Object>> finalResult = new ArrayList<>();
+
+	    groupedByYear.forEach((year, months) -> {
+	        months.sort(Collections.reverseOrder());
+	        finalResult.add(Map.of("year", year, "months", months));
+	    });
+
+	    finalResult.sort((a, b) -> Integer.compare((Integer) b.get("year"), (Integer) a.get("year")));
+
+	    return finalResult;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> getAvailableTenderedDatesByProcessCode(Integer processCode)
+	{
+	
+	    List<YearMonthProjection> flatDates = tenderRepo.findTenderdYearAndMonthFromLetterNoDate(processCode);
+
+	    Map<Integer, List<Integer>> groupedByYear = flatDates.stream().collect(Collectors.groupingBy(YearMonthProjection::getYear,
+	            Collectors.mapping(YearMonthProjection::getMonth, Collectors.toList())));
+
+	    List<Map<String, Object>> finalResult = new ArrayList<>();
+
+	    groupedByYear.forEach((year, months) -> {
+	        months.sort(Collections.reverseOrder());
+	        finalResult.add(Map.of("year", year, "months", months));
+	    });
+
+	    finalResult.sort((a, b) -> Integer.compare((Integer) b.get("year"), (Integer) a.get("year")));
+
+	    return finalResult;
 	}
 	
     private boolean userHasAnyRole(User user, String... roles) {
@@ -828,7 +992,6 @@ public class TransportService {
 		));
     }
 
-    // --- Private Helper Method for DTO Mapping (for Pending Lists) ---
     private VehicleDraftListDTO mapToVehicleDraftListDTO(
     		VehicleFinal finalList,
     		Vcctc vcctc,
@@ -844,6 +1007,8 @@ public class TransportService {
         dto.setPurchaseDate(finalList.getPurchasedate());
         dto.setDepreciatedValue(finalList.getDepreciatedamount());
         dto.setTotalKmsLogged(finalList.getTotalkms());
+        
+        dto.setProcesscode(finalList.getProcesscode().getProcesscode());
        
         dto.setMviReportsAvailable(Mvi_Available_Status.equalsIgnoreCase(finalList.getMvireportavailable()));
     
@@ -867,6 +1032,33 @@ public class TransportService {
             dto.setAllotteddate(allottedVehicle.getAllottedDate());
             dto.setAllotteesname(allottedVehicle.getAllotteesName());
             dto.setAllotteesaddress(allottedVehicle.getAllotteesAddress());
+
+            String combinedInfo = allottedVehicle.getLetternodate();
+            
+            // Correctly check if the string is valid before trying to split it
+            if (combinedInfo != null && !combinedInfo.trim().isEmpty() && combinedInfo.contains("|")) {
+                // Split on the pipe character. Remember to escape it for regex.
+                String[] parts = combinedInfo.split("\\|");
+
+                // Safely set the letter number part
+                if (parts.length > 0) {
+                    dto.setAllotmentLetterNo(parts[0].trim());
+                }
+
+                // Safely parse and set the date part
+                if (parts.length > 1) {
+                    String dateString = parts[1].trim();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    try {
+                        LocalDate localDate = LocalDate.parse(dateString, formatter);
+                        // Convert to java.util.Date for the DTO
+                        dto.setAllotmentLetterDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                    } catch (DateTimeParseException e) {
+                        log.error("Could not parse allotment date '{}'", dateString);
+                        // Don't set the date if it's invalid
+                    }
+                }
+            }
         }
 
         // Lifter Table (LiftedVehicles)
@@ -921,12 +1113,12 @@ public class TransportService {
         vehDraft.setAccidentdamage(vehFinal.getAccidentdamage());
         vehDraft.setMviprice(vehFinal.getMviprice());
         vehDraft.setMviremarks(vehFinal.getMviremarks());
-        vehDraft.setEntrydate(vehFinal.getEntrydate()); // Keep original entry date? Or set new? You decide.
+        vehDraft.setEntrydate(vehFinal.getEntrydate()); 
         vehDraft.setFinancialYearCode(vehFinal.getFinancialYearCode());
         vehDraft.setVersionflagcode(vehFinal.getVersionflagcode());
         
         vehDraft.setProcesscode(returnedProcess);
-        vehDraft.setRemarks(returnRemarks); // Set remarks from the request DTO
+        vehDraft.setRemarks(returnRemarks);
         return vehDraft;
     }
 
@@ -991,24 +1183,26 @@ public class TransportService {
     	
     	scrapEntry.setVehicleFinal(vehicleFinal);
     	
-    	StringBuilder letterNoDateBuilder = new StringBuilder();
+//    	StringBuilder letterNoDateBuilder = new StringBuilder();
+//    	
+//    	if(StringUtils.hasText(dto.getLetterNo()))
+//    	{
+//    		letterNoDateBuilder.append(dto.getLetterNo());
+//    	}
+//    	
+//    	if(dto.getLetterDate() != null)
+//    	{
+//    		if(letterNoDateBuilder.length() > 0)
+//    		{
+//    			letterNoDateBuilder.append(" Dt.");
+//    		}
+//    		
+//    		letterNoDateBuilder.append(dto.getLetterDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+//    	}
+//    	
+//    	scrapEntry.setLetterNoDate(letterNoDateBuilder.toString());
     	
-    	if(StringUtils.hasText(dto.getLetterNo()))
-    	{
-    		letterNoDateBuilder.append(dto.getLetterNo());
-    	}
-    	
-    	if(dto.getLetterDate() != null)
-    	{
-    		if(letterNoDateBuilder.length() > 0)
-    		{
-    			letterNoDateBuilder.append(" Dt.");
-    		}
-    		
-    		letterNoDateBuilder.append(dto.getLetterDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
-    	}
-    	
-    	scrapEntry.setLetterNoDate(letterNoDateBuilder.toString());
+    	scrapEntry.setLetterNoDate(dto.getLetterNo() + "|" + dto.getLetterDate());
     	
     	scrapEntry.setAmount(dto.getPrice());
     	
@@ -1043,23 +1237,25 @@ public class TransportService {
     	
     	tenderEntry.setVehicleFinal(vehicleFinal);
     	
-    	StringBuilder letterNoDateBuilder = new StringBuilder();
-    	if(StringUtils.hasText(dto.getLetterNo()))
-    	{
-    		letterNoDateBuilder.append(dto.getLetterNo());
-    	}
+//    	StringBuilder letterNoDateBuilder = new StringBuilder();
+//    	if(StringUtils.hasText(dto.getLetterNo()))
+//    	{
+//    		letterNoDateBuilder.append(dto.getLetterNo());
+//    	}
+//    	
+//    	if(dto.getLetterDate() != null)
+//    	{
+//    		if(letterNoDateBuilder.length() > 0)
+//    		{
+//    			letterNoDateBuilder.append(" Dt."); 
+//    		}
+//    		
+//    		letterNoDateBuilder.append(dto.getLetterDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
+//    	}
     	
-    	if(dto.getLetterDate() != null)
-    	{
-    		if(letterNoDateBuilder.length() > 0)
-    		{
-    			letterNoDateBuilder.append(" Dt.");
-    		}
-    		
-    		letterNoDateBuilder.append(dto.getLetterDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
-    	}
+//    	tenderEntry.setLetternodate(letterNoDateBuilder.toString());
     	
-    	tenderEntry.setLetternodate(letterNoDateBuilder.toString());
+    	tenderEntry.setLetternodate(dto.getLetterNo() + "|" + dto.getLetterDate());
     	
     	tenderEntry.setEntryDate(LocalDate.now());
     	

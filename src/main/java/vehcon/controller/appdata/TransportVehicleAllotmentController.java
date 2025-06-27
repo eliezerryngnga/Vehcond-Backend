@@ -31,6 +31,8 @@ public class TransportVehicleAllotmentController {
 	@GetMapping("/priced")
 	public ResponseEntity<?> getPricedVehicles(
 			@RequestParam(value = "search", required = false) String searchTerm,
+			@RequestParam(required = false) Integer year,
+			@RequestParam(required = false) Integer month,
 			Pageable pageable,
 			@AuthenticationPrincipal User user
 			)
@@ -38,7 +40,13 @@ public class TransportVehicleAllotmentController {
 		try
 		{
 			
-			Page<VehicleDraftListDTO> pricedVehicles = transportService.getPricedVehicles(searchTerm, pageable, user);
+			Page<VehicleDraftListDTO> pricedVehicles = transportService.getPricedVehicles(
+					searchTerm,
+					year,
+					month, 
+					pageable, 
+					user
+				);
 			return ResponseEntity.ok(pricedVehicles);
 		}
 		catch(Exception e)

@@ -1,0 +1,262 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="listApprovedByTransport" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="09d57a9b-6481-432d-8869-79b8a964f40f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="VEHCOND"/>
+	<field name="slno" class="java.lang.Long"/>
+	<field name="registrationno" class="java.lang.String"/>
+	<field name="departmentname" class="java.lang.String"/>
+	<field name="officename" class="java.lang.String"/>
+	<field name="vehicletypedescription" class="java.lang.String"/>
+	<field name="manufactureyear" class="java.lang.Integer"/>
+	<field name="purchasedate" class="java.time.LocalDate"/>
+	<field name="vehicleprice" class="java.lang.Integer"/>
+	<field name="depreciatedamount" class="java.lang.Integer"/>
+	<field name="totalkms" class="java.lang.Integer"/>
+	<field name="mvireportavailable" class="java.lang.String"/>
+	<field name="accidentcaseresolved" class="java.lang.String"/>
+	<field name="remarks" class="java.lang.String"/>
+	<title height="62" splitType="Stretch">
+		<element kind="staticText" uuid="d43f5ba1-2c4e-4fb6-9316-e3ac7da13b5d" x="0" y="0" width="802" height="62" fontSize="14.0" bold="true" underline="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[LIST OF VEHICLES APPROVED BY TRANSPORT]]></text>
+		</element>
+	</title>
+	<columnHeader height="39" splitType="Stretch">
+		<element kind="staticText" uuid="d25164eb-48b0-4591-9e73-b26116854e43" mode="Opaque" x="0" y="0" width="30" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Slno]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="7cf424f1-9ddb-4a57-b08e-5b169543e493" mode="Opaque" x="30" y="0" width="70" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Registration No]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="2a9261ed-1df2-4740-8f96-24e5d6d84fde" mode="Opaque" x="100" y="0" width="98" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Department]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="1c9f80a0-0624-4f05-8e7c-87d26425c276" mode="Opaque" x="198" y="0" width="107" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Office]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="d6343510-bcae-42ef-8531-e14b5539d91f" mode="Opaque" x="305" y="0" width="78" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Vehicle type]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="a6591741-f094-4346-857e-07e0b5f58c70" mode="Opaque" x="383" y="0" width="69" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Mfr. year]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="93425026-66d4-4a5f-a2e6-9907c0825316" mode="Opaque" x="452" y="0" width="58" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Purchase Date]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="6724a9ed-8461-4606-963d-4c5770513998" mode="Opaque" x="510" y="0" width="56" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Price]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="3d100d00-34d6-419b-a7e8-e568478479e3" mode="Opaque" x="566" y="0" width="60" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Dep. Value]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="7a9f73eb-153d-4251-8ca6-0b1b1c6762fe" mode="Opaque" x="626" y="0" width="48" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Total KMS]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="0222a76f-40e1-45ec-9a99-b1d55d78a221" mode="Opaque" x="674" y="0" width="38" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[MVI Report]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="3d2427a9-9572-4d7a-b5e0-5226194ca85c" mode="Opaque" x="712" y="0" width="50" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Accident]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="e32a6115-3b95-4ab2-841f-50d440ac1352" mode="Opaque" x="762" y="0" width="40" height="39" backcolor="#BFE1FF" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Remark]]></text>
+			<box>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<element kind="textField" uuid="e05de8c8-7f4c-47fc-8f64-46c59296538b" x="0" y="0" width="30" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{slno}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="536ff175-4c07-42da-91ef-f62fbb1c7f99" x="30" y="0" width="70" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{registrationno}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="7b21e860-65d4-48cd-b98a-24151a66a014" x="100" y="0" width="98" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{departmentname}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="e633d267-31bd-4d57-8ff7-160d2b1f3c39" x="198" y="0" width="107" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{officename}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="ab863773-45a7-4b77-a8a2-2d1bb009c91b" x="305" y="0" width="78" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{vehicletypedescription}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="a65b206c-54a8-48b8-b86a-74d39369b05c" x="383" y="0" width="69" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{manufactureyear}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="cc72e737-25e2-41ba-ac5c-99d8d646ab05" x="452" y="0" width="58" height="33" textAdjust="StretchHeight" pattern="dd/MM/yyyy" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{purchasedate}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="7cf44c0b-044f-40e8-8a21-9311357f84eb" x="510" y="0" width="56" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{vehicleprice}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="e6130b92-b695-442a-a9f9-7e50b1a1378f" x="566" y="0" width="60" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{depreciatedamount}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="a65f97b6-b8ef-4155-ac10-096b48457788" x="626" y="0" width="48" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{totalkms}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="559d8137-b76e-44d4-9d55-84089e5a1e80" x="674" y="0" width="38" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{mvireportavailable}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="b5c4644a-9e8c-4a37-b64a-25da5027581b" x="712" y="0" width="50" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{accidentcaseresolved}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="45465e6d-54b9-450f-90e8-0b6158580231" x="762" y="0" width="40" height="33" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{remarks}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

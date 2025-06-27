@@ -1,6 +1,7 @@
 package vehcon.dto.appdata;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -26,6 +27,8 @@ public class VehicleDraftListDTO
     private boolean mviReportsAvailable;
     private boolean anyCasePending;   
     
+    private Integer processcode;
+    
     //Vcctc Table
     private Integer tcPrice;
     
@@ -34,6 +37,8 @@ public class VehicleDraftListDTO
     private LocalDate allotteddate;
     private String allotteesname;
     private String allotteesaddress;
+    private String allotmentLetterNo;
+    private Date allotmentLetterDate;
 
     //Lifter Table
     private String liftersname;

@@ -3,11 +3,13 @@ package vehcon.services.reports;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -15,11 +17,11 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.pdf.JRPdfExporter;
@@ -42,10 +44,7 @@ public class VehicleDetailsReportService {
 	private final VehiclePartsConditionFinalRepository vehPartsConditionRepo;
 	
 //	jasper reports (.jrxml file)
-	private static final String VEHICLE_DETAILS_REPORT_PATH = "/reports/vehicleDetails.jrxml";
-	private static final String VEHICLE_DETAILS_SUBREPORT_PATH = "/reports/vehicleDetails_subreport1.jrxml"; 
-	
-	private static final String VEHICLE_SUBREPORT_PARAMETER = "VehicleDetailsSubreport";
+	private static final String VEHICLE_DETAILS_REPORT_PATH = "/reports/vehicleDetails.jasper"; 
 	
 	public byte[] generateVehicleDetailsReport(String applicationCode) {
 		
@@ -59,43 +58,20 @@ public class VehicleDetailsReportService {
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Collections.singletonList(dto));
         
         try {
-        	
-            JasperReport subreport;
-            try(InputStream subreportStream = this.getClass().getResourceAsStream(VEHICLE_DETAILS_SUBREPORT_PATH))
-            {
-            	if(subreportStream == null)
-            	{
-            		throw new ReportGenerationException("Subreport template not found at path: " + VEHICLE_DETAILS_SUBREPORT_PATH, null);
-            	}
-            	
-            	 subreport = JasperCompileManager.compileReport(subreportStream);
+            InputStream reportStream = this.getClass().getResourceAsStream(VEHICLE_DETAILS_REPORT_PATH);
+            if (reportStream == null) {
+                log.error("Main report template not found at path: {}", VEHICLE_DETAILS_REPORT_PATH);
+                throw new ReportGenerationException("Main report template not found at path: " + VEHICLE_DETAILS_REPORT_PATH, null);
             }
-            catch(Exception e)
-            {
-            	log.error("Failed to compile subreport template: {}", VEHICLE_DETAILS_SUBREPORT_PATH, e);
-                throw new ReportGenerationException("Could not compile subreport template: " + VEHICLE_DETAILS_SUBREPORT_PATH, e);
-            }
-            
-            JasperReport mainReport;
-            try (InputStream reportStream = this.getClass().getResourceAsStream(VEHICLE_DETAILS_REPORT_PATH)) {
-                if (reportStream == null) {
-                    throw new ReportGenerationException("Main report template not found at path: " + VEHICLE_DETAILS_REPORT_PATH, null);
-                }
-                mainReport = JasperCompileManager.compileReport(reportStream);
-                
-            } catch (Exception e) {
-                log.error("Failed to compile main report template: {}", VEHICLE_DETAILS_REPORT_PATH, e);
-                throw new ReportGenerationException("Could not compile main report template: " + VEHICLE_DETAILS_REPORT_PATH, e);
-            }
-            
-            // --- 5. Prepare Parameters and Fill Report ---
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("applicationcode", applicationCode);
-            parameters.put(VEHICLE_SUBREPORT_PARAMETER, subreport); // Pass compiled subreport to main report
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(mainReport, parameters, dataSource);
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+            log.info("Main report loaded successfully from .jasper file.");
             
-            // --- 6. Export Report to PDF (Inlined Logic) ---
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("SUBREPORT_DIR", "reports/");
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             JRPdfExporter pdfExporter = new JRPdfExporter();
             pdfExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -113,52 +89,53 @@ public class VehicleDetailsReportService {
 
 
 	private String[] parseLetterAndDate(String combinedString) {
-	    if (combinedString == null || combinedString.trim().isEmpty()) {
-	        return new String[]{null, null};
+	    if (combinedString == null || combinedString.trim().isEmpty() || !combinedString.contains("|")) {
+	        return new String[]{combinedString, null};
 	    }
-	    String trimmedInput = combinedString.trim();
-	    int pipeIndex = trimmedInput.indexOf('|');
-	
-	    if (pipeIndex == -1) {
-	        return new String[]{trimmedInput, null};
-	    }
-	
-	    String letterNoPart = trimmedInput.substring(0, pipeIndex).trim();
-	    String potentialDatePart = trimmedInput.substring(pipeIndex + 1).trim();
-	
-	    try {
-	        // CORRECTED: No formatter is needed for the standard YYYY-MM-DD format.
-	        LocalDate.parse(potentialDatePart);
-	        return new String[]{letterNoPart, potentialDatePart};
-	    } catch (DateTimeParseException e) {
-	        log.warn("Could not parse date '{}' from combined string '{}'. It was not in YYYY-MM-DD format.", potentialDatePart, trimmedInput);
-	        return new String[]{trimmedInput, null};
-	    }
+	    return combinedString.split("\\|",2);
 	}
 	
 	private VehicleDetailsDTO toVehicleDetailsDTO(VehicleFinal vehFinal, List<VehiclePartsConditionFinal> parts) 
 	{
 		VehicleDetailsDTO dto = new VehicleDetailsDTO();
+	
+        String[] dirLetter = parseLetterAndDate(vehFinal.getDirectorateLetterNodate());
+        dto.setDirectorateLetterNo(dirLetter[0]);
+        if (dirLetter.length > 1 && dirLetter[1] != null && !dirLetter[1].isEmpty()) {
+            LocalDate localDate = LocalDate.parse(dirLetter[1]);
+            dto.setDirectorateLetterDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        }
+
+        String[] govtLetter = parseLetterAndDate(vehFinal.getGovtLetterNoDate());
+        dto.setGovtLetterNo(govtLetter[0]);
+        if (govtLetter.length > 1 && govtLetter[1] != null && !govtLetter[1].isEmpty()) {
+            LocalDate localDate = LocalDate.parse(govtLetter[1]);
+            dto.setGovtLetterDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        }
 		
-		 String[] dirLetter = parseLetterAndDate(vehFinal.getDirectorateLetterNodate());
-		 dto.setDirectorateLetterNo(dirLetter[0]);
-	     dto.setDirectorateLetterDate(dirLetter[1] != null ? LocalDate.parse(dirLetter[1]) : null);
-	
-	        // --- Split Government Letter No and Date ---
-	        String[] govtLetter = parseLetterAndDate(vehFinal.getGovtLetterNoDate());
-	        dto.setGovtLetterNo(govtLetter[0]);
-	        dto.setGovtLetterDate(govtLetter[1] != null ? LocalDate.parse(govtLetter[1]) : null);
-	
+        StringJoiner locationJoiner = new StringJoiner(", ");
+        if(vehFinal.getPremises() != null && !vehFinal.getPremises().trim().isEmpty())
+        {
+        	locationJoiner.add(vehFinal.getPremises());
+        }
+        if(vehFinal.getLocations() != null && !vehFinal.getLocations().trim().isEmpty())
+        {
+        	locationJoiner.add(vehFinal.getLocations());
+        }
+        
+        if (vehFinal.getPurchasedate() != null) {
+            dto.setPurchasedate(Date.from(vehFinal.getPurchasedate().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        }
+        
+        dto.setFullLocation(locationJoiner.toString());
+        
 	      	dto.setOfficerdesignation(vehFinal.getOfficerDesignation());
-	        dto.setPremises(vehFinal.getPremises());
-	        dto.setLocations(vehFinal.getLocations());
-	        
+
 	        dto.setVehicledescription(vehFinal.getVehicledescription());
 	        dto.setRegistrationno(vehFinal.getRegistrationNo());
 	        dto.setEngineno(vehFinal.getEngineno());
 	        dto.setChassisno(vehFinal.getChassisno());
 	        dto.setManufactureyear(vehFinal.getManufactureyear());
-	        dto.setPurchasedate(vehFinal.getPurchasedate());
 	        dto.setVehicleprice(vehFinal.getVehicleprice());
 	        dto.setTotalkms(vehFinal.getTotalkms());
 	        dto.setDepreciatedamount(vehFinal.getDepreciatedamount());

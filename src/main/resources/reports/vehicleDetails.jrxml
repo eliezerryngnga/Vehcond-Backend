@@ -1,32 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd-->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vehicleDetails" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="r1s2t3u4-v5w6-x7y8-z9a0-b1c2d3e4f5g6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="YOUR_DATA_ADAPTER"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-
-	<style name="LabelStyle" vTextAlign="Middle">
-		<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
-			<topPen lineWidth="0.5" lineStyle="Solid"/>
-			<leftPen lineWidth="0.5" lineStyle="Solid"/>
-			<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-			<rightPen lineWidth="0.5" lineStyle="Solid"/>
-		</box>
-	</style>
-	<style name="ValueStyle" style="LabelStyle" hTextAlign="Center"/>
-
-	<!-- Parameter remains the same -->
-	<parameter name="applicationcode" class="java.lang.String"/>
-	<parameter name="VehicleDetailsSubreport" class="net.sf.jasperreports.engine.JasperReport"/>
-	
-	<!-- Fields are cleaned up, assuming Java backend provides separate fields -->
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="vehicleDetails" language="java" pageWidth="555" pageHeight="802" columnWidth="545" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="609c5f7c-0d38-42fa-9fe4-7e7583843585">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="178"/>
+	<parameter name="SUBREPORT_DIR" forPrompting="false" class="java.lang.String">
+		<defaultValueExpression><![CDATA["."]]></defaultValueExpression>
+	</parameter>
 	<field name="departmentname" class="java.lang.String"/>
 	<field name="officerdesignation" class="java.lang.String"/>
-	<field name="premises" class="java.lang.String"/>
-	<field name="locations" class="java.lang.String"/>
+	<field name="fullLocation" class="java.lang.String"/>
 	<field name="directorateLetterNo" class="java.lang.String"/>
-	<field name="directorateLetterDate" class="java.time.LocalDate"/>
+	<field name="directorateLetterDate" class="java.util.Date"/>
 	<field name="govtLetterNo" class="java.lang.String"/>
-	<field name="govtLetterDate" class="java.time.LocalDate"/>
+	<field name="govtLetterDate" class="java.util.Date"/>
 	<field name="vehicletypedescription" class="java.lang.String"/>
 	<field name="vehicledescription" class="java.lang.String"/>
 	<field name="vehiclemanufacturername" class="java.lang.String"/>
@@ -35,7 +21,7 @@
 	<field name="engineno" class="java.lang.String"/>
 	<field name="chassisno" class="java.lang.String"/>
 	<field name="manufactureyear" class="java.lang.Integer"/>
-	<field name="purchasedate" class="java.time.LocalDate"/>
+	<field name="purchasedate" class="java.util.Date"/>
 	<field name="vehicleprice" class="java.lang.Integer"/>
 	<field name="totalkms" class="java.lang.Integer"/>
 	<field name="depreciatedamount" class="java.lang.Integer"/>
@@ -53,138 +39,622 @@
 	<field name="mviprice" class="java.lang.Integer"/>
 	<field name="mviremarks" class="java.lang.String"/>
 	<field name="parts" class="java.util.List"/>
-
-	<title>
-		<band height="60" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="555" height="60" uuid="ab4f103f-8884-469a-8a15-bbfa6878a70d"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[VEHICLE DETAILS]]></text>
-			</staticText>
-		</band>
-	</title>
-	
 	<detail>
-		<!-- This band contains all general information -->
-		<band height="550" splitType="Prevent">
-			<frame>
-				<reportElement x="0" y="0" width="555" height="550" uuid="frame-1"/>
-				<!-- Each key-value pair is a set of staticText and textField -->
-				<!-- They will flow automatically due to positionType="Float" -->
-				<staticText>
-					<reportElement style="LabelStyle" x="0" y="0" width="255" height="20" uuid="label-1"/>
-					<text><![CDATA[Name of department]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement style="ValueStyle" x="255" y="0" width="300" height="20" uuid="value-1"/>
-					<textFieldExpression><![CDATA[$F{departmentname}]]></textFieldExpression>
-				</textField>
-
-				<!-- All other fields follow the same Label/Value pattern -->
-				<!-- Example for address which might wrap -->
-				<staticText>
-					<reportElement style="LabelStyle" stretchType="RelativeToTallestObject" x="0" y="20" width="255" height="30" positionType="Float" uuid="label-2"/>
-					<text><![CDATA[Present location/Address]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement style="ValueStyle" stretchType="RelativeToTallestObject" x="255" y="20" width="300" height="30" positionType="Float" uuid="value-2"/>
-					<textFieldExpression><![CDATA[($F{premises} == null ? "" : $F{premises} + ", ") + $F{locations}]]></textFieldExpression>
-				</textField>
-				
-				<!-- ... This pattern continues for all 20+ fields ... -->
-				<!-- Example for Directorate Letter No/Date -->
-				<staticText>
-					<reportElement style="LabelStyle" x="0" y="50" width="255" height="20" positionType="Float" uuid="label-3"/>
-					<text><![CDATA[Directorate Letter No.]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement style="ValueStyle" x="255" y="50" width="300" height="20" positionType="Float" uuid="value-3"/>
-					<textFieldExpression><![CDATA[$F{directorateLetterNo}]]></textFieldExpression>
-				</textField>
-
-				<staticText>
-					<reportElement style="LabelStyle" x="0" y="70" width="255" height="20" positionType="Float" uuid="label-4"/>
-					<text><![CDATA[Directorate Letter Date]]></text>
-				</staticText>
-				<textField pattern="dd MMMM, yyyy" isBlankWhenNull="true">
-					<reportElement style="ValueStyle" x="255" y="70" width="300" height="20" positionType="Float" uuid="value-4"/>
-					<textFieldExpression><![CDATA[$F{directorateLetterDate}]]></textFieldExpression>
-				</textField>
-
-				<!-- Example for a Yes/No field -->
-				<staticText>
-					<reportElement style="LabelStyle" x="0" y="90" width="255" height="20" positionType="Float" uuid="label-5"/>
-					<text><![CDATA[Whether the vehicle met with an accident]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement style="ValueStyle" x="255" y="90" width="300" height="20" positionType="Float" uuid="value-5"/>
-					<textFieldExpression><![CDATA["Y".equals($F{whetheraccident}) ? "Yes" : "No"]]></textFieldExpression>
-				</textField>
-			</frame>
+		<band height="792" splitType="Stretch">
+			<element kind="staticText" uuid="a42ee2e2-d673-4848-985b-1d6ba8d12c46" x="11" y="69" width="232" height="35" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[Name of department to which vehicle   belongs]]></text>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="caf092ad-b8a2-469b-a12f-a72fd82781e7" x="11" y="268" width="232" height="24" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[ Government letter date]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="f3f7cdde-6819-4054-b91c-a6af3bb458b3" x="11" y="239" width="232" height="29" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[ Government letter no.]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="8386cd5f-b306-46d6-a9ca-bfea5a84b5af" x="11" y="136" width="232" height="43" fontSize="10.0" bold="true">
+				<text><![CDATA[Present location/Address]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="105a497a-636d-4feb-95cb-77a82d4d6c16" x="11" y="104" width="232" height="32" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[Designation of officer to which vehicle is allotted]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="aeda548f-5a7f-48f7-9b33-052b6a6c6f5d" x="243" y="239" width="297" height="29" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{govtLetterNo}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="19a6314d-7baa-48e9-be81-8e5ce0079dfc" x="243" y="69" width="297" height="35" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{departmentname}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="e3131638-4444-4994-bf4c-14801044cd82" x="243" y="268" width="296" height="24" fontSize="10.0" textAdjust="StretchHeight" pattern="dd-MMM-yyyy" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{govtLetterDate}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="5163a2aa-f5ad-4509-bb55-5231a3c33d75" stretchType="ContainerHeight" x="243" y="136" width="297" height="43" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Top">
+				<expression><![CDATA[$F{fullLocation}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="5d44a0b9-df63-4ade-a105-00bafb8200e9" x="243" y="104" width="297" height="32" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{officerdesignation}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="cb14e07e-6d60-46ff-b4b7-2b4aa6500dd2" x="11" y="416" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ 	Date of purchase]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="ab0a463d-a34b-422f-bea1-3f7a2c560ace" x="11" y="210" width="232" height="29" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[ Directorate letter date]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="0769a291-9279-4648-b3cd-6c6dfd6f7d4b" x="11" y="458" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Depreciated value of the vehicle]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="fd870d65-7016-4917-ba57-ff7902a84905" x="11" y="528" width="232" height="26" fontSize="10.0" bold="true">
+				<text><![CDATA[ Total expenditure incurred on maintenance till now ]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="03a0baf5-ffeb-43c6-8dac-e576cdc0fb23" x="11" y="430" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Vehicle purchase price]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="4c5f5a52-3d6d-42c8-be6d-136a663aeb38" x="11" y="444" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Total kilometers logged ]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="347faae4-55da-43c7-b864-b9cd1832e822" x="11" y="346" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ District where the vehicle was registered]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="6d9b711f-adf6-4c24-b456-6da3c125b96a" x="11" y="500" width="232" height="28" fontSize="10.0" bold="true">
+				<text><![CDATA[ Total expenditure incurred in respect of P.O.L. if borne by the Government ]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="3f01b83d-c2b3-4d60-80ac-903992405510" x="11" y="402" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Year of manufacture]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="bfe5c3f0-5a3f-4fce-bc7b-b0d5a8d6b20b" x="11" y="374" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ 	Engine number]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="c82ea393-d064-4952-8939-845621109d45" x="11" y="608" width="232" height="27" fontSize="10.0" bold="true">
+				<text><![CDATA[ Whether the case in connection with the accident has been settled]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="24fc0ecd-7233-4b98-917d-9e58a2e7e448" x="11" y="292" width="232" height="15" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[ Vehicle category]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="d6d27f9c-9565-41a2-93c8-80be99600495" x="11" y="307" width="232" height="25" fontSize="10.0" bold="true">
+				<text><![CDATA[ Vehicle description]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="e8487a19-6563-4175-b7c7-3fb048cbe059" x="11" y="472" width="232" height="28" fontSize="10.0" bold="true">
+				<text><![CDATA[ Improvement or additional fitments made, if any, and cost thereof]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="c29c7786-45fb-4a53-8d0b-95d2c5ba04e0" x="11" y="332" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Vehicle manufacturer]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="0c0b5fbc-1512-4343-b791-c732f2cea1b4" x="11" y="554" width="232" height="40" fontSize="10.0" bold="true">
+				<text><![CDATA[ Repairs(costing over Rs. 1,000)undertaken during the last 6(six) months before the proposal for condemnation or before the vehicle was shut down]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="566d42f0-4aac-4d5e-ac5d-cca2f54f203e" x="11" y="360" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Registration number]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="e965fa11-4dbf-44b1-878f-6a5a2629ecf7" x="11" y="594" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Whether the vehicle has met with an accident]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="b0b15e08-03df-4fa7-8de1-abb59d14f80e" x="11" y="388" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ Chassis number]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="a798a65b-9c5d-4d3e-8db1-1275b7eba7f1" x="11" y="635" width="232" height="31" fontSize="10.0" bold="true">
+				<text><![CDATA[ Views/Comments of the Departmental officer ]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="41be6188-a90f-416d-97de-e5071990e14d" x="11" y="179" width="232" height="31" fontSize="10.0" bold="true" vTextAlign="Middle">
+				<text><![CDATA[Directorate letter no.]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="381ed246-d96c-4f43-a397-35f6e4de9b6c" x="0" y="2" width="545" height="46" fontName="SansSerif" fontSize="24.0" bold="true" underline="true" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[VEHICLE DETAILS]]></text>
+			</element>
+			<element kind="textField" uuid="f93c4ed2-2560-4443-b441-2f8ce0b416c2" x="243" y="444" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{totalkms}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="4efe781b-322d-451f-8cb3-205f245789cc" x="243" y="608" width="296" height="27" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{accidentcaseresolved}.equals("Y")?"YES":"NO"]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="3d32e253-1bc1-4f79-bd16-ea9db9f95c05" x="243" y="332" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{vehiclemanufacturername}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c1ff13f5-dd6b-4e55-8033-78610d5e8072" x="243" y="402" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{manufactureyear}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="154a90b7-b192-4e86-8355-43973b218251" x="243" y="416" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" pattern="dd-MMM-yyyy" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{purchasedate}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="4919a35a-0f6b-487d-8c52-3eb61b512885" x="243" y="594" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{whetheraccident}.equals("Y")?"YES":"NO"]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="22572fc5-606a-48d5-9709-d73ece131907" x="243" y="292" width="296" height="15" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{vehicletypedescription}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="2cdd46ca-f2b9-4477-a46f-c45a95836067" stretchType="ContainerHeight" x="243" y="472" width="296" height="28" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[$F{improvements}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="f060d473-9b53-47ed-be4e-e8cf7e0f555c" x="243" y="388" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{chassisno}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="4db70f1f-d0a8-4291-8cd3-647434d1088f" x="243" y="528" width="296" height="26" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{repairexpenses}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c3d11172-07b3-425f-b57a-8e732dc288d4" x="243" y="554" width="296" height="40" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{repairslastsixmonths}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="f9047ada-a410-4d85-b565-54773ea92dbc" x="243" y="307" width="296" height="25" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Top">
+				<expression><![CDATA[$F{vehicledescription}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="362f04f1-6513-4910-93c2-4ef9fc13e3b9" x="243" y="360" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{registrationno}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="69e70a2f-8a22-4e55-9549-0ff42bf40cd7" x="243" y="500" width="296" height="28" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{expenses}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="87778f7c-bb0f-45c6-bac3-ee6cb9dc5cb7" x="243" y="374" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{engineno}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="d7caec4b-eb09-4b9c-b55c-1356d4ea44ef" x="243" y="635" width="296" height="31" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{comments}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="8f3326e8-58bd-440e-9680-943f718a0b30" x="243" y="430" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{vehicleprice}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="3ef8de1b-2ad6-45da-a5f3-89ea2f1937d1" x="243" y="346" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{districtname}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="7bf60315-0f12-47f7-85b8-0621080e30d4" x="11" y="666" width="232" height="14" fontSize="10.0" bold="true">
+				<text><![CDATA[ 	Is MVI Report available ?]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="e28d3369-5cfa-4fa4-828d-fbfbd5021be0" x="243" y="666" width="296" height="14" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{mvireportavailable}.equals("Y")?"YES":"NO"]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="ccbc8249-ca5e-404f-be61-9b1d1cd050c1" x="243" y="179" width="297" height="31" fontSize="10.0" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{directorateLetterNo}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="a6c3a30e-6742-4b67-8219-0e21ada1fd40" x="243" y="210" width="297" height="29" fontSize="10.0" textAdjust="StretchHeight" pattern="dd-MMM-yyyy" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{directorateLetterDate}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="03de9eb8-ac70-4095-a26b-e9dd855c06a0" x="243" y="458" width="296" height="14" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{depreciatedamount}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="6995a23b-507c-4f64-b00e-ad655d4346a5" x="24" y="740" width="100" height="20" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("N")]]></printWhenExpression>
+				<text><![CDATA[Date]]></text>
+			</element>
+			<element kind="staticText" uuid="c1cf09be-426b-4852-b30c-118f090777c1" x="404" y="740" width="100" height="20" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("N")]]></printWhenExpression>
+				<text><![CDATA[Signature]]></text>
+			</element>
 		</band>
-
-		<!-- This band contains the MVI specific information, and ONLY prints if available -->
-		<band height="250">
-			<printWhenExpression><![CDATA["Y".equals($F{mvireportavailable})]]></printWhenExpression>
-			<frame>
-				<reportElement x="0" y="10" width="555" height="240" uuid="frame-mvi"/>
-				<staticText>
-					<reportElement x="0" y="0" width="555" height="20" uuid="mvi-header"/>
-					<textElement textAlignment="Center">
-						<font size="12" isBold="true" isUnderline="true"/>
-					</textElement>
-					<text><![CDATA[MVI REPORT DETAILS]]></text>
-				</staticText>
-				
-				<!-- MVI specific fields in a 2-column layout -->
-				<staticText>
-					<reportElement style="LabelStyle" x="0" y="30" width="255" height="20" uuid="label-mvi-1"/>
-					<text><![CDATA[Battery Details]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement style="ValueStyle" x="255" y="30" width="300" height="20" uuid="value-mvi-1"/>
-					<textFieldExpression><![CDATA[$F{battery}]]></textFieldExpression>
-				</textField>
-				
-				<!-- Subreport for parts is placed here -->
-				<subreport>
-					<reportElement x="0" y="60" width="555" height="30" positionType="Float" uuid="subreport-1"/>
-					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{parts})]]></dataSourceExpression>
-					<subreportExpression><![CDATA[$P{VehicleDetailsSubreport}]]></subreportExpression>
-				</subreport>
-				
-				<!-- Signature section for MVI -->
-				<staticText>
-					<reportElement x="0" y="210" width="100" height="20" positionType="Float" uuid="mvi-date-label"/>
-					<textElement textAlignment="Center"/>
-					<text><![CDATA[Date]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="455" y="210" width="100" height="20" positionType="Float" uuid="mvi-sig-label"/>
-					<textElement textAlignment="Center"/>
-					<text><![CDATA[Signature]]></text>
-				</staticText>
-			</frame>
+		<band height="38">
+			<element kind="subreport" uuid="5812f7f6-acab-4dfc-a0dc-26793d0011f4" x="11" y="10" width="528" height="19" printWhenDetailOverflows="true">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{parts})]]></dataSourceExpression>
+				<expression><![CDATA[$P{SUBREPORT_DIR} + "/vehicleDetails_subreport1.jasper"]]></expression>
+			</element>
 		</band>
-		
-		<!-- This band ONLY prints if MVI report is NOT available -->
-		<band height="50">
-			<printWhenExpression><![CDATA["N".equals($F{mvireportavailable})]]></printWhenExpression>
-			<frame>
-				<reportElement x="0" y="10" width="555" height="40" uuid="frame-no-mvi"/>
-				<staticText>
-					<reportElement x="0" y="10" width="100" height="20" uuid="no-mvi-date-label"/>
-					<textElement textAlignment="Center"/>
-					<text><![CDATA[Date]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="455" y="10" width="100" height="20" uuid="no-mvi-sig-label"/>
-					<textElement textAlignment="Center"/>
-					<text><![CDATA[Signature]]></text>
-				</staticText>
-			</frame>
+		<band height="342">
+			<element kind="staticText" uuid="0bdbff7c-e240-429c-b49c-7265a51aa91d" x="11" y="7" width="228" height="41" bold="true">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<text><![CDATA[ Accident damage]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="b4f04a31-0925-46d4-ae69-087aba591f86" x="11" y="76" width="228" height="14" bold="true">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<text><![CDATA[ MVI's assessment of current value]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="89f217a8-c327-4cf8-a4a8-9b1186b0c0cc" x="11" y="90" width="228" height="27" bold="true">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<text><![CDATA[ Reasons of variation from normal depreciated value]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="cafcc5a2-3530-4098-bb15-f8ffb6a72852" x="11" y="62" width="228" height="14" bold="true">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<text><![CDATA[ 	Tyres Condition]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="6bb03ad8-3510-4b9d-bdb9-c598f57692da" x="11" y="48" width="228" height="14" bold="true">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<text><![CDATA[ Battery details]]></text>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="dc62e419-aa84-4ce7-876b-f76fd752fc4c" x="239" y="48" width="300" height="14" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<expression><![CDATA[$F{battery}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="18215cb9-757e-4060-b184-522090adab91" x="239" y="90" width="300" height="27" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<expression><![CDATA[$F{mviremarks}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="d09101b9-8055-45c1-8fba-73941fb8b71d" x="239" y="62" width="300" height="14" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<expression><![CDATA[$F{tyres}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="7d7fe16f-7563-4308-b4c1-9d0d6f5e126e" x="239" y="7" width="300" height="41" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<expression><![CDATA[$F{accidentdamage}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c4dbc994-e3b2-4c0c-9037-6b5141f6579c" x="239" y="76" width="300" height="14" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<expression><![CDATA[$F{mviprice}]]></expression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="7a6b7810-24f3-49e7-9720-3e039bcf3296" x="416" y="185" width="100" height="20" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<text><![CDATA[Signature]]></text>
+			</element>
+			<element kind="staticText" uuid="fe9f0bc1-da70-48c5-83b6-18811c535666" x="24" y="185" width="100" height="20" hTextAlign="Center" vTextAlign="Middle">
+				<printWhenExpression><![CDATA[$F{mvireportavailable}.equals("Y")]]></printWhenExpression>
+				<text><![CDATA[Date]]></text>
+			</element>
 		</band>
 	</detail>
 </jasperReport>

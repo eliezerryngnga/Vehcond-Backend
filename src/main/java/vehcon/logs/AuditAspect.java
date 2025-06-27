@@ -24,7 +24,7 @@ public class AuditAspect {
 	private final AuditService auditService;
 	private final CoreServices coreServices;
 	
-	@Around("@annotation(gad.quarters.annotations.Auditable)")
+	@Around("@annotation(vehcon.annotations.Auditable)")
     public Object audit(ProceedingJoinPoint joinPoint) throws Throwable{
         // Capture details of the HTTP request
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

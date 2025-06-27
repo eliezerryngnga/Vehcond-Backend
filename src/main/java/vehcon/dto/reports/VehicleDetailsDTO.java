@@ -1,6 +1,7 @@
 package vehcon.dto.reports;
 
-import java.time.LocalDate;
+
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -10,14 +11,13 @@ public class VehicleDetailsDTO {
 	
 	private String departmentname;
 	private String officerdesignation;
-	private String premises;
-	private String locations;
+	private String fullLocation;
 	
 	private String directorateLetterNo;
-	private LocalDate directorateLetterDate;
+	private Date directorateLetterDate;
 	
 	private String govtLetterNo;
-	private LocalDate govtLetterDate;
+	private Date govtLetterDate;
 	
 	private String vehicletypedescription;
 	private String vehicledescription;
@@ -27,7 +27,7 @@ public class VehicleDetailsDTO {
 	private String engineno;
 	private String chassisno;
 	private Integer manufactureyear;
-	private LocalDate purchasedate;
+	private Date purchasedate;
 	private Integer vehicleprice;
 	private Integer totalkms;
 	private Integer depreciatedamount;

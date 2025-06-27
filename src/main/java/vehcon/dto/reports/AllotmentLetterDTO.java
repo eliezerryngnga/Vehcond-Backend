@@ -1,21 +1,21 @@
-package vehcon.dto.reports;
+package vehcon.dto.reports; // Use your actual package name
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import lombok.Data;
 
 @Data
 public class AllotmentLetterDTO {
-	
-	private String allotteesname;
-	private String allotteesaddress;
-	private String letterNumber;
-	private LocalDate letterDate;
-	
-	private String registrationno;
-	private String officename;
-	private String locations;
-	private String departmentname;
-	
-	private Integer vcctcprice;
+    private String letterNumberFormatted;
+    private Date letterDate;
+    private String mainParagraph;
+    private String priceParagraph;
+    private String liftingParagraph;
+    private String underSecretaryLine;
+    private String memoNumberFormatted;
+    private String memoDateFormatted;
+    private String memoRecipient1;
+    private String memoRecipient2;
+    private String memoRecipient3Address;
+    private String allotteesname;
 }
