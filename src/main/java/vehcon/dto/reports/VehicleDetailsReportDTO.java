@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class VehicleDetailsDTO {
+public class VehicleDetailsReportDTO {
 	
 	private String departmentname;
 	private String officerdesignation;
@@ -46,5 +46,5 @@ public class VehicleDetailsDTO {
 	private Integer mviprice;
 	private String mviremarks;
 	
-	private List<VehiclePartsConditionDTO> parts;
+	private List<VehiclePartsConditionReportDTO> parts;
 }

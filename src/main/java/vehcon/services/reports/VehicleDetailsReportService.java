@@ -25,8 +25,8 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.pdf.JRPdfExporter;
-import vehcon.dto.reports.VehicleDetailsDTO;
-import vehcon.dto.reports.VehiclePartsConditionDTO;
+import vehcon.dto.reports.VehicleDetailsReportDTO;
+import vehcon.dto.reports.VehiclePartsConditionReportDTO;
 import vehcon.exception.ReportGenerationException;
 import vehcon.exception.ResourceNotFoundException;
 import vehcon.models.appdata.VehicleFinal;
@@ -53,7 +53,7 @@ public class VehicleDetailsReportService {
     	
     	List<VehiclePartsConditionFinal> partsList = vehPartsConditionRepo.findByApplicationCode(vehFinal);
     
-        VehicleDetailsDTO dto = toVehicleDetailsDTO(vehFinal, partsList);
+        VehicleDetailsReportDTO dto = toVehicleDetailsDTO(vehFinal, partsList);
         
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Collections.singletonList(dto));
         
@@ -95,9 +95,9 @@ public class VehicleDetailsReportService {
 	    return combinedString.split("\\|",2);
 	}
 	
-	private VehicleDetailsDTO toVehicleDetailsDTO(VehicleFinal vehFinal, List<VehiclePartsConditionFinal> parts) 
+	private VehicleDetailsReportDTO toVehicleDetailsDTO(VehicleFinal vehFinal, List<VehiclePartsConditionFinal> parts) 
 	{
-		VehicleDetailsDTO dto = new VehicleDetailsDTO();
+		VehicleDetailsReportDTO dto = new VehicleDetailsReportDTO();
 	
         String[] dirLetter = parseLetterAndDate(vehFinal.getDirectorateLetterNodate());
         dto.setDirectorateLetterNo(dirLetter[0]);
@@ -167,9 +167,9 @@ public class VehicleDetailsReportService {
 	            dto.setDistrictname(vehFinal.getRegisteredDistrict().getDistrictName());
 	        }
 	       
-	        List<VehiclePartsConditionDTO> partDTOs = parts.stream()
+	        List<VehiclePartsConditionReportDTO> partDTOs = parts.stream()
 	            .map(part -> {
-	                VehiclePartsConditionDTO partDto = new VehiclePartsConditionDTO();
+	                VehiclePartsConditionReportDTO partDto = new VehiclePartsConditionReportDTO();
 	                
 	                partDto.setCondition(part.getCondition());
 	                

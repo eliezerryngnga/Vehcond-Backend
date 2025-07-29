@@ -104,15 +104,14 @@ public class SecurityConfig {
 						"/dates/tendered",
 						"/dates/lifted",
 						"/dates/scrapped",
-						"/dates/non-lifted"
+						"/dates/non-lifted",
+						
+						"/assigned-pages/**",
+						"/final-submit/details/**"
 						)
 				.hasAnyAuthority( DA.name(), ADMIN.name(),TD.name())
 				
-//				.requestMatchers(GET,
-//						"/reports/vehicle-report/**",
-//						"/reports/allotment-letter/**",
-//						"/reports/approved-vehicles-report"
-//				).hasAnyAuthority( ADMIN.name(), TD.name())
+//				.requestMatchers(PUT, "/users/get-user-info").hasAnyAuthority(ADMIN.name())
 				
 				.requestMatchers(POST, "/users/change-password","/users/update",
 						"/draft",
@@ -132,7 +131,9 @@ public class SecurityConfig {
 						"/transport-action/declare-tender", 
 						"/transport-allotment/allot", 
 						"/transport-lifting/lift",
-						"/role/add-role"
+						"/role/add-role",
+						
+						"/assign-pages/**"
 						)
 				.hasAnyAuthority(DA.name(), ADMIN.name(), TD.name())
 

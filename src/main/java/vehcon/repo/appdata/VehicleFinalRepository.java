@@ -18,6 +18,8 @@ public interface VehicleFinalRepository extends JpaRepository<VehicleFinal, Stri
 	List<VehicleFinal> findByEntrydate(LocalDate entryDate);
 	
 	List<VehicleFinal> findByFinancialYearCode_Financialyearcode(Integer financialyearcode);
+
+	Optional<VehicleFinal> findByApplicationCode(String applicationCode);
 	
 //	 @Query("SELECT v FROM VehicleFinal v WHERE YEAR(v.entrydate) = :year AND MONTH(v.entrydate) = :month")
 //	    List<VehicleFinal> findByEntryYearAndMonth(@Param("year") int year, @Param("month") int month);

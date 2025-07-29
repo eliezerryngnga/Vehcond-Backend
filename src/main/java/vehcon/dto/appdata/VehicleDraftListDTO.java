@@ -1,7 +1,6 @@
 package vehcon.dto.appdata;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -35,10 +34,13 @@ public class VehicleDraftListDTO
     //AllotVehicle Table
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate allotteddate;
+    
     private String allotteesname;
     private String allotteesaddress;
     private String allotmentLetterNo;
-    private Date allotmentLetterDate;
+    
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate allotmentLetterDate;
 
     //Lifter Table
     private String liftersname;

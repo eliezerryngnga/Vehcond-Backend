@@ -10,4 +10,7 @@ import vehcon.models.masters.UserPagesId;
 public interface UserPagesRepository extends JpaRepository<UserPages, UserPagesId>{
 
 	List<UserPages> findByIdRoleCode(Integer roleCode);
+
+	void deleteByIdRoleCode(Integer roleCode);
+	
 }

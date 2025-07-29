@@ -1,9 +1,11 @@
  package vehcon.services.appdata;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import vehcon.annotations.Auditable;
 import vehcon.common.data.util.SpecificationUtils;
 import vehcon.dto.appdata.PartsConditionInputDTO;
+import vehcon.dto.appdata.VehicleDetailsDTO;
 import vehcon.dto.appdata.VehicleDraftDTO;
 import vehcon.dto.appdata.VehicleDraftListDTO;
 import vehcon.models.appdata.VehicleFinal;
@@ -46,7 +49,7 @@ import vehcon.repo.masters.VehicleTypeRepository;
 @Slf4j
 public class VehicleFinalServices {
 
-	private final VehicleDraftRepository vehDraftRepo;
+	private final VehicleDraftRepository vehFinalRepo;
     private final VehiclePartsConditionDraftRepository vehPartsConditionDraftRepo;
     
 	private final VehicleFinalRepository vehicleFinalRepo;
@@ -59,6 +62,8 @@ public class VehicleFinalServices {
     private final VehicleTypeRepository vehicleTypeRepo;
     private final VehicleManufacturerRepository vehicleManufacturerRepo;
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    
     @Auditable
     @Transactional
     public String addVehicleFinal(VehicleDraftDTO vehicleDraftDTO) {
@@ -233,14 +238,14 @@ public class VehicleFinalServices {
             
             if(draftApplicationCode != null && !draftApplicationCode.isEmpty())
             {
-            	VehicleDraft draftToDelete = vehDraftRepo.findByApplicationCode(draftApplicationCode)
+            	VehicleDraft draftToDelete = vehFinalRepo.findByApplicationCode(draftApplicationCode)
                 		.orElse(null);
             	
             	if(draftToDelete != null)
             	{
             		vehPartsConditionDraftRepo.deleteByApplicationCode(draftToDelete);
             		
-            		vehDraftRepo.delete(draftToDelete);
+            		vehFinalRepo.delete(draftToDelete);
             		log.info("Successfully deleted draft with applicationCode {} after final submission.", draftApplicationCode);
                 } else {
                     log.warn("Could not find draft with applicationCode {} to delete after finalization. It may have been deleted already or never existed.", draftApplicationCode);
@@ -307,6 +312,148 @@ public class VehicleFinalServices {
         return finalPage.map(this::mapToVehicleDraftListDTO);
     }
     
+    @Transactional(readOnly = true)
+    public VehicleDetailsDTO getVehicleDetailsByApplicationCode(String applicationCode) 
+    {
+        VehicleFinal vehFinal = vehicleFinalRepo.findByApplicationCode(applicationCode)
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle Draft with applicationCode " + applicationCode + " not found."));
+
+        List<VehiclePartsConditionFinal> partConditionsFromDb = vehiclePartsConditionFinalRepo.findAllByVehicle(vehFinal);
+       
+        VehicleDetailsDTO dto = new VehicleDetailsDTO();
+
+        dto.setApplicationCode(vehFinal.getApplicationCode());
+        
+        dto.setOfficeName(vehFinal.getOfficeName());
+        dto.setOfficerDesignation(vehFinal.getOfficerDesignation());
+        dto.setPremises(vehFinal.getPremises());
+        
+        dto.setVehicledescription(vehFinal.getVehicledescription());
+        dto.setEngineno(vehFinal.getEngineno());
+        dto.setChassisno(vehFinal.getChassisno());
+        dto.setManufactureyear(vehFinal.getManufactureyear());
+        dto.setPurchasedate(vehFinal.getPurchasedate());
+        dto.setVehicleprice(vehFinal.getVehicleprice());
+        dto.setTotalkms(vehFinal.getTotalkms());
+        dto.setDepreciatedamount(vehFinal.getDepreciatedamount());
+        dto.setImprovements(vehFinal.getImprovements());
+        dto.setExpenses(vehFinal.getExpenses());
+        dto.setRepairexpenses(vehFinal.getRepairexpenses());
+        dto.setRepairslastsixmonths(vehFinal.getRepairslastsixmonths());
+        dto.setWhetheraccident(vehFinal.getWhetheraccident());
+        dto.setAccidentcaseresolved(vehFinal.getAccidentcaseresolved());
+        dto.setComments(vehFinal.getComments());
+        dto.setMvireportavailable(vehFinal.getMvireportavailable());
+        dto.setBattery(vehFinal.getBattery());
+        dto.setTyres(vehFinal.getTyres());
+        dto.setAccidentdamage(vehFinal.getAccidentdamage());
+        dto.setMviprice(vehFinal.getMviprice());
+        dto.setMviremarks(vehFinal.getMviremarks());
+
+        if (vehFinal.getDepartmentCode() != null) {
+            dto.setDepartmentName(vehFinal.getDepartmentCode().getDepartmentName());
+        }
+
+        if (vehFinal.getFinancialYearCode() != null) {
+//            dto.setFinancialYearCode(vehFinal.getFinancialYearCode().getFinancialyearcode());
+//            dto.setFinancialYearFrom(vehFinal.getFinancialYearCode().getFinancialYearFrom());
+//            dto.setFinancialYearTo(vehFinal.getFinancialYearCode().getFinancialYearTo());
+        	 String fyString = vehFinal.getFinancialYearCode().getFinancialYearFrom() 
+                     + " - " 
+                     + vehFinal.getFinancialYearCode().getFinancialYearTo();
+     
+        	 dto.setFinancialYear(fyString);
+        }
+
+        if (vehFinal.getRegisteredDistrict() != null) {
+            dto.setRegisteredDistrict(vehFinal.getRegisteredDistrict().getDistrictCode());
+        }
+
+        if (vehFinal.getVehicletypecode() != null) {
+            dto.setVehicletypename(vehFinal.getVehicletypecode().getVehicletypedescription());
+        }
+
+        if (vehFinal.getVehiclemanufacturercode() != null) {
+            dto.setVehiclemanufacturercode(vehFinal.getVehiclemanufacturercode().getVehicleManufacturerCode());
+        }
+        
+        if (vehFinal.getRegistrationNo() != null && !vehFinal.getRegistrationNo().trim().isEmpty()) {
+            String fullRegNo = vehFinal.getRegistrationNo().trim();
+
+            // Find the first space
+            int firstSpaceIndex = fullRegNo.indexOf(' ');
+
+            // Find the second space, starting the search after the first one
+            int secondSpaceIndex = -1;
+            if (firstSpaceIndex != -1) {
+                secondSpaceIndex = fullRegNo.indexOf(' ', firstSpaceIndex + 1);
+            }
+            
+            // If a second space exists, we can split correctly
+            if (secondSpaceIndex != -1) {
+                dto.setRtoCode(fullRegNo.substring(0, secondSpaceIndex));
+                dto.setVehicleRegistrationNumber(fullRegNo.substring(secondSpaceIndex + 1).trim());
+            } else {
+                // Handle cases with less than two spaces (e.g., "ML 04" or "Something")
+                // You could assign the whole string to the RTO code or the number, depending on your business logic.
+                dto.setRtoCode(fullRegNo);
+                dto.setVehicleRegistrationNumber(null);
+            }
+        }
+        
+        if (vehFinal.getLocations() != null && !vehFinal.getLocations().trim().isEmpty()) {
+            String[] addressParts = vehFinal.getLocations().split(",", 2);
+            dto.setAddress1(addressParts.length > 0 ? addressParts[0].trim() : null);
+            dto.setAddress2(addressParts.length > 1 ? addressParts[1].trim() : null);
+        }
+
+
+        if (vehFinal.getDirectorateLetterNodate() != null && vehFinal.getDirectorateLetterNodate().contains("|")) {
+            String[] letterParts = vehFinal.getDirectorateLetterNodate().split("\\|", 2);
+            dto.setDirectorateLetterNo(letterParts[0]);
+            if (letterParts.length > 1 && !letterParts[1].trim().isEmpty()) {
+                try {
+                	String dateString = letterParts[1].trim();
+                    dto.setDirectorateLetterDate(LocalDate.parse(dateString, DATE_FORMATTER));
+                } catch (Exception e) {
+                    log.warn("Could not parse directorate letter date: {}", letterParts[1], e);
+                    dto.setDirectorateLetterDate(null);
+                }
+            }
+        }
+
+        if (vehFinal.getGovtLetterNoDate() != null && vehFinal.getGovtLetterNoDate().contains("|")) {
+            String[] letterParts = vehFinal.getGovtLetterNoDate().split("\\|", 2);
+            dto.setForwardingLetterNo(letterParts[0]);
+            if (letterParts.length > 1 && !letterParts[1].trim().isEmpty()) {
+                
+            	try {
+            		String dateString = letterParts[1].trim();
+                    dto.setGovForwardingLetterDate(LocalDate.parse(dateString, DATE_FORMATTER));
+                } catch (Exception e) {
+                    log.warn("Could not parse government forwarding letter date: {}", letterParts[1], e);
+                    dto.setGovForwardingLetterDate(null);
+                }
+            }
+        }
+
+
+        if (partConditionsFromDb != null && !partConditionsFromDb.isEmpty()) {
+            List<PartsConditionInputDTO> partConditionDTOs = partConditionsFromDb.stream()
+                    .map(pcd -> {
+                        PartsConditionInputDTO partDto = new PartsConditionInputDTO();
+                        if (pcd.getVehiclepartcode() != null) {
+                            partDto.setVehiclepartname(pcd.getVehiclepartcode().getVehiclePartDescription());
+                        }
+                        partDto.setCondition(pcd.getCondition());
+                        return partDto;
+                    })
+                    .collect(Collectors.toList());
+            dto.setVehiclePartsFinal(partConditionDTOs);
+        }
+
+        return dto;
+    }
     
     private VehicleDraftListDTO mapToVehicleDraftListDTO(VehicleFinal finalList) {
         VehicleDraftListDTO dto = new VehicleDraftListDTO();

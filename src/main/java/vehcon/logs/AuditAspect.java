@@ -29,10 +29,17 @@ public class AuditAspect {
         // Capture details of the HTTP request
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes != null ? attributes.getRequest() : null;
+        
+        String username = (request != null && request.getUserPrincipal() != null) ? request.getUserPrincipal().getName() : "Anonymous";
+        
+        if("Anonymous".equals(username))
+        {
+        	return joinPoint.proceed();
+        }
+       
         HttpServletResponse response = attributes != null ? attributes.getResponse() : null;
         
         String action = joinPoint.getSignature().getName();
-        String username = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "Anonymous";
         String uri = (request != null) ? request.getRequestURI() : "Unknown URI";
         String clientIp = (request != null) ? coreServices.getClientIp(request) : "Unknown IP";
 

@@ -1,13 +1,11 @@
 package vehcon.services.appdata;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -655,6 +653,8 @@ public class TransportService {
     			AllottedVehicle allottedVehicle = allottedVehicleRepo.findById(applicationCode)
     					.orElseThrow(() -> new EntityNotFoundException("AllottedVehicle record not found for application code: " + applicationCode));
     			
+    			vehicle.setAllottedVehicle(null);
+    			
     			LiftedVehicles liftedEntry = mapToLiftedEntry(liftingDto, vehicle);
     				
     			liftedVehicleRepo.save(liftedEntry);
@@ -675,6 +675,7 @@ public class TransportService {
     			AllottedVehicle allottedVehicle = allottedVehicleRepo.findById(applicationCode)
     					.orElseThrow(() -> new EntityNotFoundException("AllottedVehicle record not found for application code: " + applicationCode));
     			
+    			vehicle.setAllottedVehicle(null);
     			allottedVehicleRepo.delete(allottedVehicle);
     			
     			Processes notLiftedProcess = processRepo.findById(PROCESS_CODE_NON_LIFTED_VEHICLE)
@@ -1048,11 +1049,11 @@ public class TransportService {
                 // Safely parse and set the date part
                 if (parts.length > 1) {
                     String dateString = parts[1].trim();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     try {
                         LocalDate localDate = LocalDate.parse(dateString, formatter);
                         // Convert to java.util.Date for the DTO
-                        dto.setAllotmentLetterDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                        dto.setAllotmentLetterDate(localDate);
                     } catch (DateTimeParseException e) {
                         log.error("Could not parse allotment date '{}'", dateString);
                         // Don't set the date if it's invalid

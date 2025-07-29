@@ -7,15 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import vehcon.annotations.Auditable;
+import vehcon.dto.appdata.VehicleDetailsDTO;
 import vehcon.dto.appdata.VehicleDraftDTO;
 import vehcon.dto.appdata.VehicleDraftListDTO;
 import vehcon.models.auth.User;
@@ -76,5 +79,24 @@ public class VehicleFinalController {
 			return new ResponseEntity<>("Error retrieving final submitted list: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping("/details/{applicationCode}")
+    public ResponseEntity<?> getVehicleDetails(@PathVariable String applicationCode)
+    {
+    	try
+    	{
+    		VehicleDetailsDTO dto = vehFinalService.getVehicleDetailsByApplicationCode(applicationCode);
+    		return new ResponseEntity<>(dto, HttpStatus.OK);
+    	}
+    	catch(EntityNotFoundException enfe)
+    	{
+    		return new ResponseEntity<>(enfe.getMessage(), HttpStatus.NOT_FOUND);
+    	}
+    	catch(Exception e)
+    	{
+    		return new ResponseEntity<>("An unexpected error occurred while retrieving the vehicle draft.", HttpStatus.INTERNAL_SERVER_ERROR); 
+    	}
+    }
+
 	
 }

@@ -6,5 +6,6 @@ import lombok.Data;
 public class PartsConditionInputDTO {
 	
 	private Integer vehiclepartcode;
+	private String vehiclepartname;
 	private String condition;
 }
